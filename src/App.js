@@ -32,8 +32,8 @@ class App extends Component {
     // receiveUserFromChild = (userID) => this.setState({ userID })
 
     // goCart     = () => this.setState({ DisplayCart: true, DisplayHome: false, DisplayProducts: false, DisplayArticles: false })
-    goHome     = () => this.setState({ DisplayCart: false, DisplayHome: true, DisplayProducts: false, DisplayArticles: false })
-    goProducts = () => this.setState({ DisplayCart: false, DisplayHome: false, DisplayProducts: true, DisplayArticles: false })
+    goHome = () => this.setState({ DisplayCart: false, DisplayHome: true, DisplayProducts: false })
+    goProducts = () => this.setState({ DisplayCart: false, DisplayHome: false, DisplayProducts: true, })
 
     render() {
         return (
@@ -42,7 +42,7 @@ class App extends Component {
                 {this.state.userID !== 'hi' ?
                     <div>
                         {/* <Navbar goHome={this.goHome} goProducts={this.goProducts} goCart={this.goCart} consumer={this.state.userID} /> */}
-                        <Navbar goHome={this.goHome} goProducts={this.goProducts} />
+                        <Navbar goHome={this.goHome} goProducts={this.goProducts} consumer={this.state.userID} />
                         
                         {this.state.DisplayHome ? <Home goProducts={this.goProducts} /> : null}
 
