@@ -418,9 +418,10 @@ header {
 
 /* Footer */
 footer {
-	min-height: 40px;
-	color: #ffffff;
-	background: #000000;
+	min-height: 30px;
+	color: #fff;
+	background: #ff87c9;
 	text-align: center;
-	padding-top: 30px;
+	padding: 15px;
+	font-size: 20px;
 }

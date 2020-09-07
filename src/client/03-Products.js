@@ -260,6 +260,8 @@ class Products extends Component {
 
                     { modal_package8 === true ? this.package8Modal_render() : null }
 				</section>
+                
+                <footer>&#169; Rolls.</footer>
 			</div>
 		)
 	}

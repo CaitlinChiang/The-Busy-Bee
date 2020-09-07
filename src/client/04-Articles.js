@@ -53,7 +53,9 @@ class Articles extends Component {
                         </div>
                     </div>
     
-                </section>		
+                </section>
+                
+                <footer>&#169; Rolls.</footer>
             </div>
         )
     }

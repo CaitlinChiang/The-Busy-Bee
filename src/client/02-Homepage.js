@@ -34,6 +34,8 @@ function Home() {
 					</div>
 				</div>
 			</section>
+
+			<footer>&#169; Rolls.</footer>
 		</div>
 	)
 }

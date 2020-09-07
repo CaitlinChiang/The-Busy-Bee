@@ -5,8 +5,8 @@ import Navbar from './01-Navbar'
 import Homepage from './02-Homepage'
 import Products from './03-Products'
 import Articles from './04-Articles'
-// import Cart from './05-Cart'
-// import Order from './06-Order'
+import Cart from './05-Cart'
+import Order from './06-Order'
 
 class Client extends Component {
 	state = {
@@ -54,8 +54,8 @@ class Client extends Component {
 					<Route exact path="/" component={Homepage} />
 					<Route exact path="/products" render={() => <Products updateCart_add={this.updateCart_add} />} />
 					<Route exact path="/features" component={Articles} />
-					{/* <Route exact path="/cart" render={() => <Cart cart={cart} updateCart_delete={this.updateCart_delete} />} /> */}
-					{/* <Route exact path="/order" render={() => <Order cart={cart} updateCart_clear={this.updateCart_clear} />} /> */}
+					<Route exact path="/cart" render={() => <Cart cart={cart} updateCart_delete={this.updateCart_delete} />} />
+					<Route exact path="/order" render={() => <Order cart={cart} updateCart_clear={this.updateCart_clear} />} />
 				</Switch>
 			</Router>
 		)

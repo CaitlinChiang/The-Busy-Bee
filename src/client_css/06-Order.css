@@ -1,0 +1,158 @@
+/* Order Form Design */
+#order {
+    min-height: 100vh;
+    background: #0f0f0f;
+    padding: 80px 30px 30px;
+}
+
+#order h1 {
+    color: #fff;
+    margin: 50px auto 20px;
+    text-align: center;
+    font-size: 30px;
+}
+
+#order > div {
+    border: 5px solid #fff;
+    padding: 10px;
+    max-width: 850px;
+    margin: 0px auto 0px;
+    text-align: center;
+}
+
+#order form {
+    border: 1px solid #fff;
+    margin: 0px auto 0px;
+    padding: 50px 20px 50px;
+}
+
+#order input, 
+#order select {
+	padding: 10px;
+	font-size: 18px;
+    color: #fff;
+    background: transparent;
+    border-bottom: 1px solid #b8b8b8;
+    border-top: none; 
+    border-right: none; 
+    border-left: none;
+	outline-style: none;
+	text-align: center;
+	margin: 20px 10px 20px;
+    display: inline-block;
+}
+
+#order select option { 
+    color: #000; 
+}
+
+::placeholder {
+    color: #b8b8b8;
+}
+
+.datepicker {
+    margin: 30px 0px 10px;
+}
+
+.datepicker h2 {
+    color: #fff;
+    font-size: 20px;
+}
+
+/* Back to Cart Link & Order Button */
+#order a {
+	font-size: 20px;
+	color: #fff;
+}
+
+#order > a div {
+    width: 140px;
+	display: block;
+	margin: 15px 0px 0px;
+	padding: 10px;
+	border-top: 1px solid #fff;
+	border-bottom: 1px solid #fff;
+	border-right: none;
+	border-left: none;
+	z-index: 1;
+	background: transparent;
+	transition: all 0.3s ease;
+  	position: relative;
+}
+
+#order > a div:hover {
+	color: #000;
+}
+
+#order > a div:hover:after {
+	top: 0;
+	height: 100%;
+}
+
+#order > a div:after {
+	position: absolute;
+	content: "";
+	width: 100%;
+	height: 0;
+	bottom: 0;
+	left: 0;
+	z-index: -1;
+	background: #fff;
+	transition: all 0.3s ease;
+}
+
+#order div form > button {
+    background: transparent;
+    color: #fff;
+	padding: 10px;
+    border-top: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    border-right: none;
+    border-left: none;
+	transition: 0.5s;
+	font-size: 20px;
+	cursor: pointer;
+	display: block;
+    margin: 30px auto 0px;
+    width: 200px;
+}
+
+#order div form > button:hover { 
+    background: #ffffff;
+    color: #000;
+}
+
+/* Account Details Footer */
+#accountDetails {
+    text-align: center;
+    min-height: 70px;
+    background-color: #333333;
+    padding: 10px;
+    color: #fff;
+    font-size: 18px;
+    letter-spacing: 1px;
+}
+
+/* Responsive Order Form */
+@media(max-width: 900px) {
+    #order input, 
+    #order select {
+        display: block;
+        margin: 0px auto 30px;
+    }
+
+    #order select {
+        width: 240px;
+        text-align: center;
+    }
+}
+
+@media(max-width: 450px) {
+    #order {
+        padding: 80px 10px 30px;
+    }
+
+    #order form {
+        padding: 50px 0px 50px;
+    }
+}
