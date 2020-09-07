@@ -1,0 +1,110 @@
+/*General*/
+html { 
+	scroll-behavior: smooth;
+}
+
+body {
+	font: 15px/1.5 Helvetica, sans-serif;
+	padding: 0;
+	margin: 0;
+	color: #FF7676;
+}
+
+.container {
+	width: 90%;
+	min-height: 100%;
+	margin: auto;
+	overflow: hidden;
+}
+
+.overflow-container {
+    flex: 1;
+    overflow-y: scroll;
+    max-height: 90vh;
+}
+
+button {
+	font-size: 17px;
+	border: none;
+	border-radius: 10px;
+	color: #ffffff;
+	font-weight: bold;
+	outline: none;
+	cursor: pointer;
+	position: relative;
+	display: inline-block;
+	padding: 7px;
+}
+
+.datePickerButton {
+    background: transparent;
+    font-weight: none;
+}
+
+ul, li {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+a { 
+	text-decoration: none; 
+}
+
+/*Animations*/
+@keyframes bouncing {
+    	0% { bottom: 0; }
+    	50% { bottom: 15px; }
+    	100% { bottom: 0; }
+}
+
+.fade-in {
+	animation: fadeIn 2s;
+}
+
+@keyframes fadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+.slideDown {
+    animation:
+        slideDown 0.75s .5s cubic-bezier(0.17,.88,.32,1.27) both,
+        fadeIn .25s .5s ease-in both;
+}
+
+@keyframes slideDown {
+    from {transform: translateY(-50%);}
+    to {transform:translateY(0);}
+}
+
+.slideRight {
+    animation:
+        slideRight 0.75s .5s cubic-bezier(0.17,.88,.32,1.27) both,
+        fadeIn .25s .5s ease-in both;
+}
+
+@keyframes slideRight {
+    from {transform: translateX(-50%);}
+    to {transform:translateX(0);}
+}
+
+.slideLeft {
+    animation:
+        slideLeft 0.75s .5s cubic-bezier(0.17,.88,.32,1.27) both,
+        fadeIn .25s .5s ease-in both;
+}
+
+@keyframes slideLeft {
+    from {transform: translateX(50%);}
+    to {transform:translateX(0);}
+}
+
+/*Scrollbar*/
+html::-webkit-scrollbar {
+    	width: 8px;
+}
+
+html::-webkit-scrollbar-thumb {
+    	background: #FF7C7C;
+}

@@ -1,0 +1,325 @@
+/*Cart Page*/
+#cart:before {
+	content: "";
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: -1;
+	display: block;
+	background-image: url('/images/bg3.jpg');
+	background-position: center;
+	background-size: cover;
+	width: 100%;
+	height: 100%;
+
+	-webkit-filter: blur(3px);
+	-moz-filter: blur(3px);
+	-o-filter: blur(3px);
+	-ms-filter: blur(3px);
+	filter: blur(3px);
+}
+
+#cart {
+	background: rgb(255,182,193);
+	background-color: rgba(0, 0, 0, 0.3);
+	min-height: 1000px;
+	text-align: center;
+}
+
+/*Table Headers*/
+#pendingHeader {
+	padding-top: 30px;
+}
+
+#pendingHeader h1, #cartHeader h1 {
+	margin: 0px 0px 30px;
+	top: 250px;
+	color: #ffffff;
+	font-family: serif;
+	font-style: oblique;
+	font-size: 50px;
+}
+
+/*Customer Data Tables*/
+.table {
+	overflow-x: auto;
+}
+
+.customerTable {
+    border-collapse: collapse;
+    margin: 0px auto 100px;
+    width: 90%;
+    border-radius: 5px 5px 0px 0px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.customerTable thead tr {
+    background-color: #C79874;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.customerTable th, .customerTable td {
+    padding: 15px;
+}
+
+.customerTable tbody tr {
+    border-bottom: 1px solid #F08080;
+    font-size: 18px;
+    background: #FFF2F2;
+    color: #E2A661;
+}
+
+.customerTable tbody tr:nth-of-type(even) {
+    background-color: #FFDFB9;
+    color: #C79874;
+}
+
+.customerTable tr td button {
+	background: #D5A249;
+	color: #ffffff;
+	padding: 10px;
+	border-radius: 5px;
+	transition: 0.5s;
+	font-weight: normal;
+	font-size: 15px;
+}
+
+.customerTable tr td button:hover {
+	background: #B2773C;
+}
+
+.customerTable tbody tr:last-of-type {
+    border-bottom: 5px solid #C79874;
+}
+
+#checkoutButton, .tableButton {
+	background: #ffffff;
+	color: #FF7676;
+	padding: 10px;
+	border-radius: 5px;
+	transition: 0.5s;
+	font-weight: normal;
+	font-size: 20px;
+	border: 1px solid #C79874;
+	margin-bottom: 100px;
+}
+
+#checkoutButton:hover, .tableButton:hover {
+	background: #C78F76;
+	color: #ffffff;
+}
+
+.warning {
+	background-color: #ffffff;
+	padding: 10px;
+	text-align: center;
+}
+
+.warning p {
+	color: #A47E59;
+	font-size: 15px;
+	font-weight: bold;
+}
+
+/*Order Form*/
+#orderDetails {
+	background: linear-gradient(#FFDB90, #FFBE98);
+	min-height: 900px;
+	text-align: center;
+}
+
+#orderHeader {
+	padding-top: 30px;
+}
+
+#orderHeader h1 {
+	margin: 0px 0px 30px;
+	top: 250px;
+	color: #ffffff;
+	font-family: serif;
+	font-style: oblique;
+	font-size: 50px;
+}
+
+form {
+	min-height: 800px;
+}
+
+.identity {
+	padding: 20px;
+	margin: auto;
+}
+
+.identity input {
+	background: #ffffff;
+	padding: 0 20px 0 10px;
+	color: #000000;
+	min-height: 40px;
+	font-size: 18px;
+	outline-style: none;
+    width: 250px;
+    text-align: center;
+    margin-top: 10px;
+	display: inline;
+	border: 1px solid #CECECE;
+	border-radius: 5px;
+	margin: 10px 20px 10px;
+	display: inline-block;
+}
+
+.mode {
+	margin: 20px 0px 20px;
+	padding: 20px;
+	text-align: center;
+}
+
+.mode select, #pickupForm #pickupPicker, #pickupForm select, #pickupForm input {
+	padding: 10px;
+	font-size: 18px;
+	color: #000000;
+	border-radius: 5px;
+	border: 1px solid #CECECE;
+	outline-style: none;
+	text-align: center;
+	margin: 20px 20px 0px;
+	display: inline-block;
+}
+
+.showcase {
+	margin: 20px auto 20px;
+}
+
+#pickupForm, #deliveryForm {
+	min-height: 150px;
+	padding: 20px;
+	text-align: center;
+}
+
+#deliveryForm select, #deliveryForm input, .footer input {
+	padding: 10px;
+	font-size: 18px;
+	color: #000000;
+	border-radius: 5px;
+	border: 1px solid #CECECE;
+	outline-style: none;
+	text-align: center;
+	margin: 20px 20px 0px;
+	display: inline-block;
+}
+
+.footer input {
+	margin-bottom: 10px;
+}
+
+#deliveryForm select, .mode select, #pickupForm select {
+	color: #707070;
+}
+
+.datepicker h1 {
+	color: #ffffff;
+	margin: 20px 0px 0px;
+}
+
+.datepicker #pickupPicker, .datepicker #deliveryPicker {
+	padding: 10px;
+	font-size: 18px;
+	color: #000000;
+	border-radius: 5px;
+	border: 1px solid #CECECE;
+	outline-style: none;
+	text-align: center;
+	margin: 0px;
+	display: block;
+}
+
+#instructions {
+	margin-top: 20px;
+	color: #000000;
+}
+
+.footer {
+	margin-bottom: 100px;
+	margin-top: 100px;
+}
+
+.footer p:first-of-type {
+	font-size: 25px;
+	color: #A47E59;
+}
+
+.footer p:last-of-type {
+	color: #D78B3F;
+	font-size: 20px;
+}
+
+.footer button {
+	background: #ffffff;
+	color: #FF7676;
+	padding: 10px 20px 10px;
+	border-radius: 5px;
+	transition: 0.5s;
+	font-weight: normal;
+	font-size: 22px;
+	border: 1px solid #C79874;
+}
+
+.footer button:hover {
+	background: #C17C37;
+	color: #ffffff;
+}
+
+.footer .vouchers {
+	margin-bottom: 30px;
+}
+
+.footer .vouchers input {
+	font-size: 18px;
+	width: 300px;
+}
+
+.informDetails {
+	background-color: #ffffff;
+	padding: 30px 30px 30px;
+}
+
+.informDetails p {
+	color: #A47E59;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+
+
+/*Responsive*/
+@media(max-width: 620px) {
+	.identity, .mode, #pickupForm, #deliveryForm {
+		margin: 0px auto 0px;
+		text-align: center;
+		justify-content: center;
+		width: 100%;
+		padding: 0px;
+	}
+}
+
+@media(max-width: 370px) {
+	.identity,
+	.identity input,
+	#deliveryForm #deliveryPicker, 
+	#deliveryForm select, 
+	#deliveryForm input,
+	.mode select, 
+	#pickupForm #pickupPicker, 
+	#pickupForm select, 
+	#pickupForm input {
+		padding: 5px;
+		margin: 10px;
+		width: 90%;
+	}
+
+	.identity input {
+		min-height: 30px;
+	}
+}

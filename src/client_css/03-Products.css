@@ -1,0 +1,272 @@
+/*Products Page*/
+#products:before {
+	content: "";
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: -1;
+	display: block;
+	background-image: url('/images/bg6.jpeg');
+	background-position: center;
+	background-size: cover;
+	width: 100%;
+	height: 100%;
+
+	-webkit-filter: blur(3px);
+	-moz-filter: blur(3px);
+	-o-filter: blur(3px);
+	-ms-filter: blur(3px);
+	filter: blur(3px);
+}
+
+#products {
+	background: rgb(255,182,193);
+	background-color: rgba(0, 0, 0, 0.3);
+	min-height: 100vh;
+	text-align: center;
+	padding-bottom: 50px;
+}
+
+#productHeader {
+	padding-top: 70px;
+}
+
+#products h1 {
+	margin: 0px 0px 50px;
+	top: 250px;
+	color: #ffffff;
+	font-family: serif;
+	font-style: oblique;
+	font-size: 50px;
+}
+
+/*Products Display*/
+#displayProducts {
+	margin-top: 50px;
+	margin-bottom: 100px;
+}
+
+#showProducts {
+	align-items: center;
+	justify-content: center;
+}
+
+#displayProducts button {
+	margin: 0px 20px 20px;
+	padding: 0px;
+	width: 400px;
+	transition: 0.5s;
+}
+
+#displayProducts button:hover {
+	transform: translateY(-8px);
+	box-shadow: 0px 15px 20px #e4c37c;
+}
+
+#displayProducts button img {
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	object-fit: cover;
+	height: 350px;
+}
+
+.productItem {
+	padding: 5px 10px 0px;
+	background-color: #ffe7b8;
+	height: 120px;
+	margin: -5px 0px 0px;
+	font-family: Helvetica, sans-serif;
+	color: #C49076;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+.productItem h2 {
+	font-size: 25px;
+	color: #ff6804;
+}
+
+.productItem p {
+	font-size: 20px;
+	font-weight: bold;
+	color: #dd5901;
+}
+
+/*Modal*/
+#modal {
+	display: block;
+	position: fixed;
+	z-index: 3;
+	left: 0;
+	top: 0;
+	height: 100%;
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.7);
+}
+
+#modal-content {
+	margin: auto;
+	margin-top: 120px;
+	width: 65%;
+	box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
+	animation-name: modalopen;
+	animation-duration: 1s;
+	border-radius: 10px;
+}
+
+@keyframes modalopen {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+#modal-header {
+	background: #f5cf54;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	height: 20px;
+}
+
+#modal-body {
+	padding: 10px 20px;
+	min-height: 500px;
+	background: #fff;
+}
+
+#modal-body img {
+	float: left;
+	margin-top: 70px;
+	width: 400px;
+}
+
+#modalDescription {
+	float: right;
+	width: 50%;
+	margin: 30px 20px 20px;
+	font-family: Helvetica, sans-serif;
+	color: #ffa48e;
+	font-size: 25px;
+}
+
+.modalSets {
+	padding: 10px;
+    font-size: 18px;
+    color: #707070;
+    border-radius: 5px;
+    border: 1px solid #a87777;
+    outline-style: none;
+    text-align: center;
+    margin: 20px 20px 10px;
+    display: inline-block;
+}
+
+#modalDescription button {
+	background: #f0d14b;
+	transition: 0.5s;
+	padding: 20px;
+	font-weight: normal;
+	font-size: 20px;
+	margin-bottom: 0px;
+}
+
+#modalDescription button:hover {
+	background: #FFAA79;
+}
+
+#modal-footer {
+	background: #f5cf54;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+	height: 20px;
+}
+
+/*Special Offers */
+#showSpecialProducts {
+	margin-bottom: 50px;
+}
+
+.specialOffer button {
+	margin: 15px 10px;
+}
+
+/*Responsive*/
+@media(max-width: 1300px) {
+	#showProducts button {
+		margin: 20px 20px 0px;
+	}
+
+	#modal-content {
+		text-align: center;
+	}
+
+	#modal-content img {
+		float: none;
+		width: 300px;
+		height: auto;
+		margin-top: 10px;
+	}
+
+	#modalDescription {
+		float: none;
+		width: 100%;
+		margin: auto;
+		margin-top: 30px;
+	}
+
+	#modalDescription h2 {
+		font-size: 25px;
+		margin-top: -25px;
+	}
+
+	#modalDescription p {
+		font-size: 18px;
+		margin-top: -10px;
+	}
+
+	#modalDescription button {
+		padding: 10px;
+		font-size: 20px;
+	}
+
+	#special_image {
+		max-height: 200px;
+		width: auto;
+		object-fit: cover;
+	}
+}
+
+@media(max-width: 800px) {
+	#productHeader h1 {
+		width: 100%;
+		text-align: center;
+		font-size: 45px;
+		margin-top: 20px;
+	}
+
+	#showProducts {
+		display: block;
+	  	align-items: center;
+	  	justify-content: center;
+	  	margin-bottom: 30px;
+	}
+
+	#showProducts button,
+	#showSpecialProducts button {
+		margin: 0px 0px 30px;
+		width: 90%;
+	}
+
+	#modal-content {
+		width: 90%;
+	}
+}
+
+@media(max-width: 400px) {
+	#modal-content img {
+		width: 200px;
+	}
+
+	#modal-content {
+		margin-top: 80px
+	}
+}
