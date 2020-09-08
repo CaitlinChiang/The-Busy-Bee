@@ -18,3 +18,20 @@ articles_add = _ => {
         written_by: 'Vp Contributor'
     })
 }
+
+city_add = _ => {
+    let id_num = helpers.timestamp()
+
+    firebase.database().ref('cities').child(`${id_num}`).update({
+        city_name: 'GCash'
+    })
+}
+
+paymentMedium_add = _ => {
+    let id_num = helpers.timestamp()
+
+    firebase.database().ref('payment_mediums').child(`${id_num}`).update({
+        payment_method: '',
+        account_number: ''
+    })
+}

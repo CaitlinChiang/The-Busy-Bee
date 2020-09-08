@@ -6,7 +6,6 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { addMonths, addDays, getDay } from 'date-fns'
 import moment from 'moment'
 import '../client_css/06-Order.css'
-import helpers from './tools'
 
 class Order extends Component {
     state = {
@@ -14,162 +13,229 @@ class Order extends Component {
         price: 0,
         
         // Data
-        cities: [],
+        orderID: 1,
+        orders: [],
         payment_mediums: [],
+        cities: [],
 
         // Order Details
-        orderID: '',
         name: '',
         mobile: '',
         email: '',
+        order_type: '',
         address: '',
         city: '',
-        paymentMethod: '',
+        payment_method: '',
         date: ''
     }
 
     componentDidMount = _ => {
-        // this.price_set()
-        // this.orderID_set()
-        // this.cities_fetch()
-        // this.paymentMediums_fetch()
+        this.price_set()
+        this.orderID_set()
+        this.cities_fetch()
+        this.paymentMediums_fetch()
     }
 
     // Fetch Data
-    // price_set = _ => {
-    //     const { cart } = this.state
+    price_set = _ => {
+        const { cart } = this.state
 
-    //     let price = 0
+        let price = 0
 
-    //     if (cart == null) {
-    //         this.setState({ price: 0 })
-    //     }
-    //     else if (cart.length > 0) {
-    //         for (let i = 0; i < cart.length; i++) {
-    //             price += cart[i].price
-    //         }
-    //         this.setState({ price })
-    //     }
-    // }
+        if (cart == null) {
+            this.setState({ price: 0 })
+        }
+        else if (cart.length > 0) {
+            for (let i = 0; i < cart.length; i++) {
+                price += cart[i].price
+            }
+            this.setState({ price })
+        }
+    }
 
-    // orderID_set = _ => {
-    //     fetch('http://localhost:5000/order_details')
-    //         .then(response => response.json())
-    //         .then(response => this.setState({ orderID: response.data[0].orderDetail_id + 1 }) )
-    // }
+    orderID_set = _ => {
+        firebase.database().ref('orders').once('value', snapshot => {
+            snapshot.forEach((snap) => {
+                this.setState({ orders: this.state.orders.concat(snap.key) })
+            })
+            this.setState({ orderID: this.state.orders.length + 1 })
+        })
+    }
 
-    // cities_fetch = _ => {
-    //     fetch('http://localhost:5000/city_deliveries')
-    //         .then(response => response.json())
-    //         .then(response => this.setState({ cities: response.data }) )
-    // }
+    cities_fetch = _ => {
+        firebase.database().ref('cities').once('value', snapshot => {
+            snapshot.forEach((snap) => {
+                var obj = {
+                    city_name: snap.val().city_name
+                }
+                this.setState({ cities: this.state.cities.concat(obj) })
+            })
+        })
+    }
 
-    // paymentMediums_fetch = _ => {
-    //     fetch('http://localhost:5000/payment_mediums')
-    //         .then(response => response.json())
-    //         .then(response => this.setState({ payment_mediums: response.data }) )
-    // }
+    paymentMediums_fetch = _ => {
+        firebase.database().ref('payment_mediums').once('value', snapshot => {
+            snapshot.forEach((snap) => {
+                var obj = {
+                    payment_method: snap.val().payment_method,
+                    account_number: snap.val().account_number
+                }
+                this.setState({ payment_mediums: this.state.payment_mediums.concat(obj) })
+            })
+        })
+    }
 
     // Save Data
-    // order_add = _ => {
-    //     const { cart, orderID, name, mobile, email, address, city, paymentMethod, date, price } = this.state
-    //     let timestamp = helpers.timestamp()
+    order_add = _ => {
+        const { cart, orderID, name, mobile, email, order_type, address, city, payment_method, date, price } = this.state
 
-    //     fetch(`http://localhost:5000/order_details/add?timestamp=${timestamp}&name=${name}&mobile=${mobile}&email=${email}&address=${address}&city=${city}&paymentMethod=${paymentMethod}&orderDate=${moment(date).format('YYYY-MM-DD')}&price=${price}`)
-    //         .then(response => response.json())
+        if (order_type === 'Pickup') {
+            firebase.database().ref('orders').child(orderID).child('order_details').update({
+                name: name,
+                mobile: mobile,
+                email: email,
+                order_type: order_type,
+                payment_method: payment_method,
+                date: moment(date).format('YYYY-MM-DD').substring(0, 10),
+                price: price
+            })
 
-    //     for (let i = 0; i < cart.length; i++) {
-    //         fetch(`http://localhost:5000/order_items/add?orderDetail_id=${orderID}&name=${cart[i].name}&color=${cart[i].color}&size=${cart[i].size}&quantity=${cart[i].quantity}`)
-    //             .then(response => response.json())
-    //     }
-    // }
+            for (let i = 0; i < cart.length; i++) {
+                firebase.database().ref('orders').child(orderID).child('order_items').child(cart[i].timestamp).update({
+                    product_name: cart[i].product_name,
+                    quantity: cart[i].quantity
+                })
+            }
+        }
+        else if (order_type === 'Delivery') {
+            firebase.database().ref('orders').child(orderID).child('order_details').update({
+                name: name,
+                mobile: mobile,
+                email: email,
+                order_type: order_type,
+                address: address,
+                city: city,
+                payment_method: payment_method,
+                date: moment(date).format('YYYY-MM-DD'),
+                price: price
+            })
 
-    // receipt = _ => {
-    //     const { cities, payment_mediums, email, orderID, name, price, address, city, paymentMethod, date, cart } = this.state
+            for (let i = 0; i < cart.length; i++) {
+                firebase.database().ref('orders').child(orderID).child('order_items').child(cart[i].timestamp).update({
+                    product_name: cart[i].product_name,
+                    quantity: cart[i].quantity
+                })
+            }
+        }
+    }
 
-    //     const city_display = _ => {
-    //         for (let i = 0; i < cities.length; i++) {
-    //             if (cities[i].city_id == city) {
-    //                 return cities[i].city_name
-    //             }
-    //         }
-    //     }
+    order_confirmation = _ => {
+        const { cart, name, mobile, email, order_type, address, city, date, payment_method, payment_mediums } = this.state
 
-    //     const paymentMethod_display = _ => {
-    //         for (let i = 0; i < payment_mediums.length; i++) {
-    //             if (payment_mediums[i].paymentMethod_id == paymentMethod) {
-    //                 return payment_mediums[i].paymentMethod_name
-    //             }
-    //         }
-    //     }
+        const order = _ => {
+            for (let i = 0; i < payment_mediums.length; i++) {
+                if (payment_mediums[i].payment_method === payment_method) {
+                    if (payment_mediums[i].account_number !== '') {
+                        let confirmation = window.confirm(`You have chosen ${payment_mediums[i].payment_method} as your mode of payment. Account Number: ${payment_mediums[i].account_number}. Would you like to confirm your order?`)
+                        if (confirmation) {
+                            alert("Kindly attach a screenshot of your proof of payment to: 0917 535 0923 (Viber)")
+                            this.order_add()
+                            this.props.updateCart_clear()
+                            this.clear()
+                        }
+                    }
+                    else {
+                        let confirmation = window.confirm(`You have chosen ${payment_mediums[i].payment_method} as your mode of payment. Would you like to confirm your order?`)
+                        if (confirmation) {
+                            alert("Kindly attach a screenshot of your proof of payment to: 0917 535 0923 (Viber)")
+                            this.order_add()
+                            this.props.updateCart_clear()
+                            this.clear()
+                        }
+                    }
+                }
+            }
+        }
 
-    //     fetch(`http://localhost:5000/receipt?email=${email}&orderID=${orderID}&name=${name}&price=${price}&address=${address}&city=${city_display()}&paymentMethod=${paymentMethod_display()}&date=${moment(date).format('YYYY-MM-DD').substring(0, 10)}&order_items=${cart}`)
-    //         .then(response => response.json())
+        if (cart.length > 0) {
+            if (order_type === 'Pickup') {
+                if (name.trim() !== '' && mobile.trim() !== '' && email.trim() !== '' && order_type.trim() !== '' && date !== '' && payment_method.trim() !== '') {
+                    order()
+                }
+                else alert("Kindly fill in all input fields.")
+            }
+            else if (order_type === 'Delivery') {
+                if (name.trim() !== '' && mobile.trim() !== '' && email.trim() !== '' && order_type.trim() !== '' && address.trim() !== '' && city.trim() !== '' && date.trim !== '' && payment_method.trim() !== '') {
+                    order()
+                }
+                else alert("Kindly fill in all input fields.")
+            }
+            else alert("Kindly fill in all input fields.")
+        }
+        else alert("Your cart is empty.")
+    }
 
-    //     alert("Thank you for purchasing from Soren! Kindly check your email for your order details. Have a nice day!")
-    // }
+    // Render Data
+    paymentMediums_render = props => {
+        const { order_type } = this.state
 
-    // order_confirmation = _ => {
-    //     const { cart, name, mobile, email, address, city, date, payment_mediums, paymentMethod } = this.state
+        if (order_type === 'Pickup') {
+            if (props.payment_method !== 'Cash on Delivery') {
+                return <option value={props.payment_method}>{props.payment_method}</option>
+            }
+        }
+        else if (order_type === 'Delivery') {
+            if (props.payment_method !== 'Payment on Pickup') {
+                return <option value={props.payment_method}>{props.payment_method}</option>
+            }
+        }
+    }
 
-    //     if (cart.length > 0) {
-    //         if (name.trim() !== '' && mobile.trim() !== '' && email.trim() !== '' && address.trim() !== '' && city.trim() !== '' && date.trim() !== '' && paymentMethod.trim() !== '') {
-    //             for (let i = 0; i < payment_mediums.length; i++) {
-    //                 if (payment_mediums[i].paymentMethod_id == paymentMethod) {
-    //                     if (payment_mediums[i].paymentMethod_account !== null) {
-    //                         let confirmation = window.confirm(`You have chosen ${payment_mediums[i].paymentMethod_name} as your mode of payment. Account Number: ${payment_mediums[i].paymentMethod_account}. Would you like to confirm your order?`)
-    //                         if (confirmation) {
-    //                             alert("Kindly attach a screenshot of your proof of payment to: sorenphilippines@gmail.com")
-    //                             this.order_add()
-    //                             this.receipt()
-    //                             this.props.updateCart_clear()
-    //                         }
-    //                     }
-    //                     else {
-    //                         let confirmation = window.confirm(`You have chosen ${payment_mediums[i].paymentMethod_name} as your mode of payment. Would you like to confirm your order?`)
-    //                         if (confirmation) {
-    //                             this.order_add()
-    //                             this.receipt()
-    //                             this.props.updateCart_clear()
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //         else alert("Kindly fill in all input fields.")
-    //     }
-    //     else alert("Your cart is empty.")
-    // }
+    accountNumbers_render = props => {
+        if (props.account_number !== '') {
+            return <p>{props.payment_method}: {props.account_number}</p>
+        }
+    }
 
-    // // Render Data
-    // paymentMediums_render = props => {
-    //     if (props.paymentMethod_account !== null) {
-    //         return <p>{props.paymentMethod_name}: {props.paymentMethod_account}</p>
-    //     }
-    // }
+    // Helper Functions
+    handleChange = event => {
+		event.preventDefault()
+		const { name, value } = event.target
+        this.setState({ [name]: value })
+    }
 
-    // // Helper Functions
-    // handleChange = event => {
-	// 	event.preventDefault()
-	// 	const { name, value } = event.target
-    //     this.setState({ [name]: value })
-    // }
+    clear = _ => {
+        this.setState({ 
+            name: '',
+            mobile: '',
+            email: '',
+            order_type: '',
+            address: '',
+            city: '',
+            payment_method: '',
+            date: ''
+        })
 
-    // filterDeliveryDates = date => {
-    //     const day = getDay(date)
+        alert("Thank you for shopping with us!")
 
-    //     return day !== 0 && day !== 1 && day !== 2 && day !== 3 && day !== 4 && day !== 5
-    // }
+        window.location = "/"
+    }
+
+    filterDeliveryDates = date => {
+        const day = getDay(date)
+
+        return date
+    }
 
     render() {
-        const { cities, payment_mediums, price, name, mobile, email, address, city, paymentMethod, date } = this.state
+        const { cities, payment_mediums, price, name, mobile, email, order_type, address, city, payment_method, date } = this.state
 
         return (
             <div>
                 <section id="order">
                     <Link to="/cart"> <div>&#8592; Back to Cart</div> </Link>
 
-                    {/* <h1>Total Cost: P{price}.00</h1>
+                    <h1>Total Cost: P{price}.00</h1>
 
                     <div>
                         <form autoComplete="off">
@@ -179,37 +245,48 @@ class Order extends Component {
                                 <input type="text" value={email.trim()} name="email" onChange={this.handleChange} placeholder="Email Address" required />
                             </div>
 
-                            <div>
-                                <input type="text" value={address} name="address" onChange={this.handleChange} placeholder="Delivery Address" required />
-                                
-                                <select value={city} name="city" onChange={this.handleChange} required >
-                                    <option value="">--Choose a City--</option>
-                                    { cities.map(item => <option value={item.city_id}>{item.city_name}</option>) }
-                                </select>
+                            <select value={order_type} name="order_type" onChange={this.handleChange} required >
+                                <option value="">--Choose Receive Method--</option>
+                                <option value="Pickup">Pickup</option>
+                                <option value="Delivery">Delivery</option>
+                            </select>
 
-                                <select value={paymentMethod} name="paymentMethod" onChange={this.handleChange} required > 
-                                    <option value="">--Choose a Payment Method--</option>
-                                    { payment_mediums.map(item => <option value={item.paymentMethod_id}>{item.paymentMethod_name}</option>) }
-                                </select>
-                            </div>
+                            { order_type !== '' ?
+                                <div>
+                                    { order_type === 'Delivery' ?
+                                        <div>
+                                            <input type="text" value={address} name="address" onChange={this.handleChange} placeholder="Delivery Address" required />
+                                            
+                                            <select value={city} name="city" onChange={this.handleChange} required >
+                                                <option value="">--Choose a City--</option>
+                                                { cities.map(item => <option value={item.city_name}>{item.city_name}</option>) }
+                                            </select>
+                                        </div>
+                                    : null }
+
+                                    <select value={payment_method} name="payment_method" onChange={this.handleChange} required > 
+                                        <option value="">--Choose a Payment Method--</option>
+                                        { payment_mediums.map(this.paymentMediums_render) }
+                                    </select>
+                                </div>
+                            : null }
 
                             <div class="datepicker">
-                                <h2>Date of Delivery</h2>
-                                <DatePicker inline selected={date} onChange={date => this.setState({ date })} minDate={addDays(new Date(), 1)} maxDate={addMonths(new Date(), 2)} filterDate={this.filterDeliveryDates} format='YYYY-MM-DD' required />
+                                <h2>Date of Pickup / Delivery</h2>
+                                <DatePicker inline selected={date} onChange={date => this.setState({ date })} minDate={addDays(new Date(), 2)} maxDate={addMonths(new Date(), 2)} filterDate={this.filterDeliveryDates} format='YYYY-MM-DD' required />
                             </div>
 
                             <button type="submit" onClick={() => this.order_confirmation()}>Order</button>
                         </form>
-                    </div> */}
-
+                    </div>
                 </section>
 
-                {/* <div id="accountDetails">
-                    { payment_mediums.map(this.paymentMediums_render) }
-                    <br/> <p>Send proof of payment to: sorenphilippines@gmail.com</p>
-                </div> */}
+                <div id="accountDetails">
+                    { payment_mediums.map(this.accountNumbers_render) }
+                    <br/> <p>Send Your Proof of Payment To: 0917 535 0923 (Viber)</p>
+                </div>
                 
-                <footer>&#169; Rolls.</footer>
+                <footer>&#169; The Busy Bee</footer>
             </div>
         )
     }

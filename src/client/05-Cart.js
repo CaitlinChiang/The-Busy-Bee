@@ -47,7 +47,7 @@ class Cart extends Component {
                     </div>
                 </section>
 
-                <footer>&#169; Rolls.</footer>
+                <footer>&#169; The Busy Bee</footer>
             </div>
 		)
 	}
