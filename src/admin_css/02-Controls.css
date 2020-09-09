@@ -1,0 +1,80 @@
+/* Admin Controls Design */
+#controls:before {
+	content: "";
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: -1;
+	display: block;
+	background-image: url('/images/bg3.jpeg');
+	background-position: center;
+	background-size: cover;
+	width: 100%;
+	height: 100%;
+
+	-webkit-filter: blur(3px);
+	-moz-filter: blur(3px);
+	-o-filter: blur(3px);
+	-ms-filter: blur(3px);
+	filter: blur(3px);
+}
+
+#controls {
+	background: rgb(255,182,193);
+	background-color: rgba(0, 0, 0, 0.3);
+	min-height: 100vh;
+	text-align: center;
+	padding-bottom: 50px;
+}
+
+#controlsHeader {
+	padding-top: 100px;
+}
+
+#controls h1 {
+	margin: 0px 0px 50px;
+	top: 250px;
+	color: #ffffff;
+	font-family: serif;
+	font-style: oblique;
+	font-size: 50px;
+}
+
+#panel {
+    background: #fff;
+    min-height: 70px;
+    border-radius: 15px;
+}
+
+#panel select {
+    padding: 10px;
+	font-size: 18px;
+    color: #3a0016;
+    background: transparent;
+    border-bottom: 1px solid #666;
+    border-top: none; 
+    border-right: none; 
+    border-left: none;
+	outline-style: none;
+	text-align: center;
+	margin: 20px 50px 50px;
+    display: inline-block;
+}
+
+#panel select option {
+    color: #000; 
+}
+
+#panel button {
+    border-radius: 5px;
+    font-size: 20px;
+    background: #ff9ee7;
+    padding: 10px;
+    margin: 0px 10px 0px;
+    transition: all 0.5s ease;
+}
+
+#panel button:hover {
+    background: #ff23c8;
+}

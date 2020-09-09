@@ -1,8 +1,31 @@
 /* Order Form Design */
+#order:before {
+	content: "";
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: -1;
+	display: block;
+	background-image: url('/images/bg7.jpeg');
+	background-position: center;
+	background-size: cover;
+	width: 100%;
+	height: 100%;
+
+	-webkit-filter: blur(3px);
+	-moz-filter: blur(3px);
+	-o-filter: blur(3px);
+	-ms-filter: blur(3px);
+	filter: blur(3px);
+}
+
 #order {
-    min-height: 100vh;
-    background: #0f0f0f;
-    padding: 80px 30px 30px;
+    background: #ffb6c1;
+	background-color: rgba(0, 0, 0, 0.3);
+	min-height: 100vh;
+    text-align: center;
+    padding: 80px 30px 100px;;
 }
 
 #order h1 {
@@ -14,10 +37,13 @@
 
 #order > div {
     border: 5px solid #fff;
+    border-radius: 10px;
     padding: 10px;
-    max-width: 850px;
+    max-width: 950px;
     margin: 0px auto 0px;
     text-align: center;
+    background: #fff;
+    opacity: 0.8;
 }
 
 #order form {
@@ -30,15 +56,15 @@
 #order select {
 	padding: 10px;
 	font-size: 18px;
-    color: #fff;
+    color: #3a0016;
     background: transparent;
-    border-bottom: 1px solid #b8b8b8;
+    border-bottom: 1px solid #666;
     border-top: none; 
     border-right: none; 
     border-left: none;
 	outline-style: none;
 	text-align: center;
-	margin: 20px 10px 20px;
+	margin: 20px 10px 50px;
     display: inline-block;
 }
 
@@ -47,31 +73,32 @@
 }
 
 ::placeholder {
-    color: #b8b8b8;
+    color: #666;
 }
 
 .datepicker {
-    margin: 30px 0px 10px;
+    margin: 30px 0px 0px;
 }
 
 .datepicker h2 {
-    color: #fff;
+    color: #3a0016;
     font-size: 20px;
 }
 
 /* Back to Cart Link & Order Button */
 #order a {
 	font-size: 20px;
-	color: #fff;
+	color: #ffdfeb;
 }
 
-#order > a div {
+#order > a div,
+#order div form > button {
     width: 140px;
 	display: block;
 	margin: 15px 0px 0px;
 	padding: 10px;
-	border-top: 1px solid #fff;
-	border-bottom: 1px solid #fff;
+	border-top: 1px solid #ffdfeb;
+	border-bottom: 1px solid #ffdfeb;
 	border-right: none;
 	border-left: none;
 	z-index: 1;
@@ -81,56 +108,55 @@
 }
 
 #order > a div:hover {
-	color: #000;
+	color: #8d0057;
 }
 
-#order > a div:hover:after {
+#order > a div:hover:after,
+#order div form > button:hover:after {
 	top: 0;
 	height: 100%;
 }
 
-#order > a div:after {
+#order > a div:after,
+#order div form > button:after {
 	position: absolute;
 	content: "";
 	width: 100%;
 	height: 0;
 	bottom: 0;
 	left: 0;
-	z-index: -1;
-	background: #fff;
+    z-index: -1;
+	background: #ffdfeb;
 	transition: all 0.3s ease;
 }
 
 #order div form > button {
-    background: transparent;
-    color: #fff;
-	padding: 10px;
-    border-top: 2px solid #fff;
-    border-bottom: 2px solid #fff;
-    border-right: none;
-    border-left: none;
-	transition: 0.5s;
+    color: #3a0016;
+    border-top: 2px solid #a70c48;
+    border-bottom: 2px solid #a70c48;
 	font-size: 20px;
-	cursor: pointer;
 	display: block;
-    margin: 30px auto 0px;
+    margin: 50px auto 0px;
     width: 200px;
+    border-radius: 0;
 }
 
-#order div form > button:hover { 
-    background: #ffffff;
-    color: #000;
+#order div form > button:after {
+    background: #a70c48;   
+}
+
+#order div form > button:hover {
+    color: #fff;
 }
 
 /* Account Details Footer */
 #accountDetails {
     text-align: center;
     min-height: 70px;
-    background-color: #333333;
+    background-color: #f5f38e;
     padding: 10px;
-    color: #fff;
+    color: #ff8800;
     font-size: 18px;
-    letter-spacing: 1px;
 }
 
 /* Responsive Order Form */

@@ -1,10 +1,12 @@
+// Addition of Products, Articles, Cities, or Payment Mediums
+
 products_add = _ => {
     let id_num = helpers.timestamp()
 
     firebase.database().ref('products').child(`${id_num}`).update({
-        product_name: 'Lemonade',
-        price: 375,
-        description: 'Nothing but high spirits and good vibes, especially when we’re talking about this classic scent.'
+        product_name: '',
+        price: 0,
+        description: ''
     })
 }
 
@@ -12,10 +14,10 @@ articles_add = _ => {
     let id_num = helpers.timestamp()
 
     firebase.database().ref('articles').child(`${id_num}`).update({
-        link: 'https://villagepipol.com/elevate-your-self-care-game-with-these-exfoliating-fragrant-body-scrubs/',
-        photo: 'https://villagepipol.com/wp-content/uploads/2020/08/The-Busy-Bee.png',
-        title: 'Elevate your self-care game with these exfoliating, fragrant body scrubs',
-        written_by: 'Vp Contributor'
+        link: '',
+        photo: '',
+        title: '',
+        written_by: ''
     })
 }
 
@@ -23,7 +25,7 @@ city_add = _ => {
     let id_num = helpers.timestamp()
 
     firebase.database().ref('cities').child(`${id_num}`).update({
-        city_name: 'GCash'
+        city_name: ''
     })
 }
 

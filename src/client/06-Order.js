@@ -6,6 +6,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { addMonths, addDays, getDay } from 'date-fns'
 import moment from 'moment'
 import '../client_css/06-Order.css'
+import helpers from './tools'
 
 class Order extends Component {
     state = {
@@ -97,7 +98,10 @@ class Order extends Component {
                 order_type: order_type,
                 payment_method: payment_method,
                 date: moment(date).format('YYYY-MM-DD').substring(0, 10),
-                price: price
+                price: price,
+                payment_status: 'Not Paid',
+                order_status: 'Pending',
+                timestamp: helpers.timestamp()
             })
 
             for (let i = 0; i < cart.length; i++) {
@@ -117,7 +121,10 @@ class Order extends Component {
                 city: city,
                 payment_method: payment_method,
                 date: moment(date).format('YYYY-MM-DD'),
-                price: price
+                price: price,
+                payment_status: 'Not Paid',
+                order_status: 'Pending',
+                timestamp: helpers.timestamp()
             })
 
             for (let i = 0; i < cart.length; i++) {
@@ -246,7 +253,7 @@ class Order extends Component {
                             </div>
 
                             <select value={order_type} name="order_type" onChange={this.handleChange} required >
-                                <option value="">--Choose Receive Method--</option>
+                                <option value="">--Receive Method--</option>
                                 <option value="Pickup">Pickup</option>
                                 <option value="Delivery">Delivery</option>
                             </select>
@@ -258,14 +265,14 @@ class Order extends Component {
                                             <input type="text" value={address} name="address" onChange={this.handleChange} placeholder="Delivery Address" required />
                                             
                                             <select value={city} name="city" onChange={this.handleChange} required >
-                                                <option value="">--Choose a City--</option>
+                                                <option value="">--City--</option>
                                                 { cities.map(item => <option value={item.city_name}>{item.city_name}</option>) }
                                             </select>
                                         </div>
                                     : null }
 
                                     <select value={payment_method} name="payment_method" onChange={this.handleChange} required > 
-                                        <option value="">--Choose a Payment Method--</option>
+                                        <option value="">--Payment Method--</option>
                                         { payment_mediums.map(this.paymentMediums_render) }
                                     </select>
                                 </div>
@@ -273,7 +280,7 @@ class Order extends Component {
 
                             <div class="datepicker">
                                 <h2>Date of Pickup / Delivery</h2>
-                                <DatePicker inline selected={date} onChange={date => this.setState({ date })} minDate={addDays(new Date(), 2)} maxDate={addMonths(new Date(), 2)} filterDate={this.filterDeliveryDates} format='YYYY-MM-DD' required />
+                                <DatePicker inline selected={date} onChange={date => this.setState({ date })} minDate={addDays(new Date(), 1)} maxDate={addMonths(new Date(), 2)} filterDate={this.filterDeliveryDates} format='YYYY-MM-DD' required />
                             </div>
 
                             <button type="submit" onClick={() => this.order_confirmation()}>Order</button>

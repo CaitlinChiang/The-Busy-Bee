@@ -38,7 +38,7 @@ class Navbar extends Component {
 
 					<div>
 						<h1>CONTACT US</h1>
-						<p>@gmail.com</p>
+						<p>thebusybee.ph@gmail.com</p>
 						<div>
 							<a href=""> <i class="fa fa-facebook" aria-hidden="true"></i> </a>
 							<a href=""> <i class="fa fa-instagram" aria-hidden="true"></i> </a>
@@ -63,11 +63,11 @@ class Navbar extends Component {
 										<li> <Link to="/#home" onClick={this.mobileMenu_hide}>Home</Link> </li>
 										<li> <Link to="/#about" onClick={this.mobileMenu_hide}>About</Link> </li>
 										<li> <Link to="/products" onClick={this.mobileMenu_hide}>Shop</Link> </li>
-										<li> <Link to="/features">Features</Link> </li>
+										<li> <Link to="/features" onClick={this.mobileMenu_hide}>Features</Link> </li>
 									</ul>
 
 									<div>
-										<p>@gmail.com</p>
+										<p>thebusybee.ph@gmail.com</p>
 										<div>
 											<a href=""> <i class="fa fa-facebook" aria-hidden="true"></i> </a>
 											<a href=""> <i class="fa fa-instagram" aria-hidden="true"></i> </a>
