@@ -40,8 +40,8 @@ class Navbar extends Component {
 						<h1>CONTACT US</h1>
 						<p>thebusybee.ph@gmail.com</p>
 						<div>
-							<a href=""> <i class="fa fa-facebook" aria-hidden="true"></i> </a>
-							<a href=""> <i class="fa fa-instagram" aria-hidden="true"></i> </a>
+							<a href="https://www.facebook.com/thebusybeeph/"> <i class="fa fa-facebook" aria-hidden="true"></i> </a>
+							<a href="https://www.instagram.com/thebusybeeph/"> <i class="fa fa-instagram" aria-hidden="true"></i> </a>
 						</div>
 					</div>
 				</section>
@@ -69,8 +69,8 @@ class Navbar extends Component {
 									<div>
 										<p>thebusybee.ph@gmail.com</p>
 										<div>
-											<a href=""> <i class="fa fa-facebook" aria-hidden="true"></i> </a>
-											<a href=""> <i class="fa fa-instagram" aria-hidden="true"></i> </a>
+											<a href="https://www.facebook.com/thebusybeeph/"> <i class="fa fa-facebook" aria-hidden="true"></i> </a>
+											<a href="https://www.instagram.com/thebusybeeph/"> <i class="fa fa-instagram" aria-hidden="true"></i> </a>
 										</div>
 									</div>
 								</div>
