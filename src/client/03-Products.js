@@ -190,10 +190,10 @@ class Products extends Component {
         console.log(cartItem)
         
         if (quantity !== 0) {
-            alert("Item Added to Cart!")
             this.props.updateCart_add(cartItem)
 
             this.setState({ quantity: 0, package_offer: [] })
+            alert("Item Added to Cart!")
         }
         else alert("Please fill in all item details.")
     }
