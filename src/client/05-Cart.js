@@ -38,7 +38,7 @@ class Cart extends Component {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    { cart.length !== null ? cart.map(this.cart_render) : <tr>Cart is Empty.</tr> }
+                                    { cart == null ? '' : cart.map(this.cart_render) }
                                 </tbody>
                             </table>
                         </div>
