@@ -26,15 +26,20 @@ class Client extends Component {
 		}
 	}
 
-	updateLocalStorage = _ => localStorage.setItem("cart", JSON.stringify(this.state.cart))
+	updateLocalStorage = _ => {
+		if (this.state.cart !== null) {
+			localStorage.setItem("cart", JSON.stringify(this.state.cart))
+		}
+	}
 
 	// Update Global Cart State
 	updateCart_add = item => {
 		console.log(item)
 	
-		let updatedCart = this.state.cart
-		updatedCart.push({ item })
-		this.setState({ cart: updatedCart })
+		// let updatedCart = this.state.cart
+		// updatedCart.push({ item })
+		// this.setState({ cart: updatedCart })
+		this.setState({ cart: [...this.state.cart, ...[item] ] })
 	}
 
 	updateCart_delete = item_timestamp => {
