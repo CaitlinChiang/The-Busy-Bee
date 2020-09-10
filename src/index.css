@@ -51,12 +51,6 @@ a {
 }
 
 /*Animations*/
-@keyframes bouncing {
-    	0% { bottom: 0; }
-    	50% { bottom: 15px; }
-    	100% { bottom: 0; }
-}
-
 .fade-in {
 	animation: fadeIn 2s;
 }
@@ -66,44 +60,11 @@ a {
 	to { opacity: 1; }
 }
 
-.slideDown {
-    animation:
-        slideDown 0.75s .5s cubic-bezier(0.17,.88,.32,1.27) both,
-        fadeIn .25s .5s ease-in both;
-}
-
-@keyframes slideDown {
-    from {transform: translateY(-50%);}
-    to {transform:translateY(0);}
-}
-
-.slideRight {
-    animation:
-        slideRight 0.75s .5s cubic-bezier(0.17,.88,.32,1.27) both,
-        fadeIn .25s .5s ease-in both;
-}
-
-@keyframes slideRight {
-    from {transform: translateX(-50%);}
-    to {transform:translateX(0);}
-}
-
-.slideLeft {
-    animation:
-        slideLeft 0.75s .5s cubic-bezier(0.17,.88,.32,1.27) both,
-        fadeIn .25s .5s ease-in both;
-}
-
-@keyframes slideLeft {
-    from {transform: translateX(50%);}
-    to {transform:translateX(0);}
-}
-
 /*Scrollbar*/
 html::-webkit-scrollbar {
     	width: 8px;
 }
 
 html::-webkit-scrollbar-thumb {
-    	background: #FF7C7C;
+    	background: #cec000;
 }

@@ -55,7 +55,7 @@
 }
 
 .customerTable thead tr {
-    background-color: #f37ab2;
+    background-color: #ffdb3c;
     color: #fff;
     font-weight: bold;
     font-size: 18px;
@@ -66,45 +66,19 @@
 }
 
 .customerTable tbody tr {
-    border-bottom: 1px solid #f37ab2;
+    border-bottom: 1px solid #ffdb3c;
     font-size: 18px;
-    background: #ffeec0;
-    color: #630227;
+    background: #fff2cd;
+    color: #ff0000;
 }
 
 .customerTable tbody tr:nth-of-type(even) {
-    background-color: #f8dc90;
-    color: #630227;
-}
-
-.customerTable tr td button {
-	background: #D5A249;
-	color: #ffffff;
-	padding: 10px;
-	border-radius: 5px;
-	transition: 0.5s;
-	font-weight: normal;
-	font-size: 15px;
-}
-
-.customerTable tr td button:hover {
-	background: #B2773C;
+    background-color: #ffddb7;
+    color: #ff0000;
 }
 
 .customerTable tbody tr:last-of-type {
-    border-bottom: 5px solid #f37ab2;
-}
-
-.tableButton {
-	background: #ffffff;
-	color: #FF7676;
-	padding: 10px;
-	border-radius: 5px;
-	transition: 0.5s;
-	font-weight: normal;
-	font-size: 20px;
-	border: 1px solid #C79874;
-	margin-bottom: 100px;
+    border-bottom: 5px solid #ffdb3c;
 }
 
 #checkoutButton:hover, .tableButton:hover {
@@ -129,5 +103,5 @@ span {
 
 #checkoutButton:hover {
 	background: #ffaeae;
-	color: #330022;
+	color: #ff0000;
 }

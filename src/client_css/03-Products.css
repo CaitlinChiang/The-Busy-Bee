@@ -35,7 +35,7 @@
 #products h1 {
 	margin: 0px 0px 50px;
 	top: 250px;
-	color: #ffffff;
+	color: #fff;
 	font-family: serif;
 	font-style: oblique;
 	font-size: 50px;
@@ -73,24 +73,24 @@
 
 .productItem {
 	padding: 5px 10px 0px;
-	background-color: #ffe7b8;
+	background-color: #ffe8b9;
 	height: 120px;
 	margin: -5px 0px 0px;
 	font-family: Helvetica, sans-serif;
-	color: #C49076;
+	color: #ecb295;
 	border-bottom-left-radius: 10px;
 	border-bottom-right-radius: 10px;
 }
 
 .productItem h2 {
 	font-size: 25px;
-	color: #ff6804;
+	color: #ff8e43;
 }
 
 .productItem p {
 	font-size: 20px;
 	font-weight: bold;
-	color: #dd5901;
+	color: #e6a33f;
 }
 
 /*Modal*/

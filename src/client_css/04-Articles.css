@@ -73,19 +73,19 @@
 
 .article {
 	padding: 10px 15px 0px;
-	background-color: #ffffff;
+	background-color: #fff;
 	color: black;
 	height: 200px;
 	margin: 0px;
 	font-family: Helvetica, sans-serif;
-	color: #ff82e0;
+	color: #ffb055;
 	border-bottom-left-radius: 10px;
 	border-bottom-right-radius: 10px;
 }
 
 .article h2 {
 	font-size: 25px;
-	color: #c931af;
+	color: #ffc400;
 }
 
 .article p {

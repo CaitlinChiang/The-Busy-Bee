@@ -78,7 +78,7 @@
 }
 
 .orderTable thead tr {
-    background-color: #ff9e81;
+    background-color: #ffd900;
     color: #fff;
     font-size: 17px;
 }
@@ -97,17 +97,17 @@
 }
 
 .orderTable tbody tr {
-    border-bottom: 1px solid #ff9e81;
+    border-bottom: 1px solid #ffd900;
     font-size: 15px;
     background: #fff;
-    color: #740027;
+    color: #ff771d;
 }
 
 .orderTable tbody tr button {
     background: transparent;
-    border: 1px solid #740027;
+    border: 1px solid #dab900;
     border-radius: 0;
-    color: #740027;
+    color: #ff771d;
     width: 100px;
     display: block;
     font-size: 15px;
@@ -118,13 +118,13 @@
 }
 
 .orderTable tbody tr button:hover {
-    background: #ff3a8c;
+    background: #ffb546;
     color: #fff;
-    border: 1px solid #ff3a8c;
+    border: 1px solid #ffb546;
 }
 
 .orderTable tbody tr:nth-of-type(even) {
-    background-color: #ffe4fd;
+    background-color: #fff2e2;
 }
 
 .orderTable tbody tr select {
@@ -136,7 +136,7 @@
 }
 
 .orderTable tbody tr:last-of-type {
-    border-bottom: 5px solid #ff9e81;
+    border-bottom: 5px solid #ffd900;
 }
 
 /* Responsive Orders Table */

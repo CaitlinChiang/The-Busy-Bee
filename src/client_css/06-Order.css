@@ -56,7 +56,7 @@
 #order select {
 	padding: 10px;
 	font-size: 18px;
-    color: #3a0016;
+    color: #7e4401;
     background: transparent;
     border-bottom: 1px solid #666;
     border-top: none; 
@@ -81,14 +81,14 @@
 }
 
 .datepicker h2 {
-    color: #3a0016;
+    color: #d1c300;
     font-size: 20px;
 }
 
 /* Back to Cart Link & Order Button */
 #order a {
 	font-size: 20px;
-	color: #ffdfeb;
+	color: #fff9a6;
 }
 
 #order > a div,
@@ -97,8 +97,8 @@
 	display: block;
 	margin: 15px 0px 0px;
 	padding: 10px;
-	border-top: 1px solid #ffdfeb;
-	border-bottom: 1px solid #ffdfeb;
+	border-top: 1px solid #fff9a6;
+	border-bottom: 1px solid #fff9a6;
 	border-right: none;
 	border-left: none;
 	z-index: 1;
@@ -108,7 +108,7 @@
 }
 
 #order > a div:hover {
-	color: #8d0057;
+	color: #ff3b3b;
 }
 
 #order > a div:hover:after,
@@ -126,14 +126,14 @@
 	bottom: 0;
 	left: 0;
     z-index: -1;
-	background: #ffdfeb;
+	background: #ffe985;
 	transition: all 0.3s ease;
 }
 
 #order div form > button {
-    color: #3a0016;
-    border-top: 2px solid #a70c48;
-    border-bottom: 2px solid #a70c48;
+    color: #ff0000;
+    border-top: 2px solid #cec002;
+    border-bottom: 2px solid #cec002;
 	font-size: 20px;
 	display: block;
     margin: 50px auto 0px;
@@ -142,11 +142,13 @@
 }
 
 #order div form > button:after {
-    background: #a70c48;   
+    background: #fff238;
 }
 
 #order div form > button:hover {
-    color: #fff;
+    color: #ff5e00;
+    border-top: 2px solid #fff238;
+    border-bottom: 2px solid #fff238;
 }
 
 /* Account Details Footer */
