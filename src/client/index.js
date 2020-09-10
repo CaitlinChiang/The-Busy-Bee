@@ -31,14 +31,10 @@ class Client extends Component {
 	// Update Global Cart State
 	updateCart_add = item => {
 		console.log(item)
-		if (this.state.cart === null) {
-			this.setState({ cart: item })
-			console.log(this.state.cart)
-		}
-		else {
-			this.setState({ cart: [...this.state.cart, ...[item] ] })
-			console.log(this.state.cart)
-		}
+	
+		let updatedCart = this.state.cart
+		updatedCart.push({ item })
+		this.setState({ cart: updatedCart })
 	}
 
 	updateCart_delete = item_timestamp => {
