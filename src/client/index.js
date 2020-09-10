@@ -29,7 +29,10 @@ class Client extends Component {
 	updateLocalStorage = _ => localStorage.setItem("cart", JSON.stringify(this.state.cart))
 
 	// Update Global Cart State
-	updateCart_add = item => this.setState({ cart: [...this.state.cart, ...[item] ] })
+	updateCart_add = item => {
+		console.log(item)
+		// this.setState({ cart: [...this.state.cart, ...[item] ] })
+	}
 
 	updateCart_delete = item_timestamp => {
 		const { cart } = this.state

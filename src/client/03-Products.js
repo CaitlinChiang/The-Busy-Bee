@@ -186,8 +186,6 @@ class Products extends Component {
             price: finalPrice,
             quantity: quantity
         }
-
-        console.log(cartItem)
         
         if (quantity !== 0) {
             this.props.updateCart_add(cartItem)
