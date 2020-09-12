@@ -67,9 +67,15 @@
 	border-radius: 10px;
 	padding: 30px;
 	display: fixed;
-	margin: 100px 60px 0px;
+	margin: 90px 60px 0px;
 	background: #fff;
 	line-height: 40px;
+}
+
+#letter h1 {
+	font-size: 30px;
+	padding: 0px 10px;
+	color: #ffd000;
 }
 
 #letter p, #siteInfo p {
@@ -78,7 +84,95 @@
 	margin: 40px;
 }
 
+/* Frequently Asked Questions */
+#questions {
+	background: #ffedbd;
+	min-height: 500px;
+	text-align: center;
+	padding: 0px 10% 50px;
+}
+
+#questions h1 {
+	margin: 0;
+	padding: 20px 10px;
+	font-size: 35px;
+	color: #f5bc00;
+}
+
+.flip-card {
+	background-color: transparent;
+	height: 170px;
+	perspective: 1000px;
+	margin: 20px auto 0px;
+}
+
+.flip-card-inner {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	transition: transform 0.6s;
+	transform-style: preserve-3d;
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.flip-card:hover .flip-card-inner {
+	transform: rotateX(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+}
+
+.flip-card p {
+	padding: 10px;
+}
+
+.flip-card-front {
+	background-color: #ffaa2b;
+	color: #fff;
+	font-size: 25px;
+}
+
+.flip-card-back {
+	background-color: #ffea75;
+	color: #f58b00;
+	transform: rotateX(180deg);
+	font-size: 20px;
+}
+
 /*Responsive*/
+@media(max-width: 1150px) {
+	#questions {
+		padding: 0px 20px 50px;
+	}
+
+	.flip-card {
+		height: 350px;
+		width: 400px;
+		display: inline-block;
+		margin: 20px 10px 0px;
+	}
+
+	.flip-card:hover .flip-card-inner {
+		transform: rotateY(180deg);
+	}
+	
+	.flip-card-back {
+		transform: rotateY(180deg);
+	}
+}
+
+@media(max-width: 850px) {
+	.flip-card {
+		margin: 20px auto 0px;
+	}
+}
+
 @media(max-width: 768px) {
 	#letter {
 		padding: 20px 0px 10px;
@@ -96,5 +190,43 @@
 
 	#letter h6, #siteInfo h6 {
 		font-size: 40px;
+	}
+}
+
+@media(max-width: 500px) {
+	#questions {
+		padding: 0px 20px 50px;
+	}
+
+	.flip-card {
+		height: 300px;
+		width: 350px;
+	}
+
+	.flip-card-front {
+		font-size: 20px;
+	}
+
+	.flip-card-back {
+		font-size: 17px;
+	}
+}
+
+@media(max-width: 400px) {
+	#questions {
+		padding: 0px 10px 50px;
+	}
+
+	.flip-card {
+		height: 350px;
+		width: 290px;
+	}
+
+	.flip-card-front {
+		font-size: 18px;
+	}
+
+	.flip-card-back {
+		font-size: 15px;
 	}
 }

@@ -23,6 +23,7 @@ class Navbar extends Component {
 					<ul>
 						<li> <Link to="/#home">Home</Link> </li>
 						<li> <Link to="/#about">About</Link> </li>
+						<li> <Link to="/#questions">FAQ</Link> </li>
 						<li> <Link to="/products">Shop</Link> </li>
 						<li> <Link to="/features">Features</Link> </li>
 						<li> <Link onClick={() => this.contact_show()}>Contact Us</Link> </li>
@@ -62,6 +63,7 @@ class Navbar extends Component {
 									<ul>
 										<li> <Link to="/#home" onClick={this.mobileMenu_hide}>Home</Link> </li>
 										<li> <Link to="/#about" onClick={this.mobileMenu_hide}>About</Link> </li>
+										<li> <Link to="/#questions" onClick={this.mobileMenu_hide}>FAQ</Link> </li>
 										<li> <Link to="/products" onClick={this.mobileMenu_hide}>Shop</Link> </li>
 										<li> <Link to="/features" onClick={this.mobileMenu_hide}>Features</Link> </li>
 									</ul>

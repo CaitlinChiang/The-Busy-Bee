@@ -97,7 +97,7 @@ header {
 }
 
 /* Optimized Navigation Bar Design for Tablets and Phones */
-@media(max-width: 840px) {
+@media(max-width: 900px) {
 	.desktopNavbar { display: none; }
 	.mobileNavbar { display: block; }
 
@@ -243,8 +243,8 @@ header {
 	.mobileNavbar ul li a {
 		position: relative;
 		display: block;
-		padding: 15px 4px 15px;
-		margin: 15px 0;
+		padding: 10px 4px 10px;
+		margin: 10px 0;
 		text-decoration: none;
 		text-transform: uppercase;
 		color: #ffd000;
