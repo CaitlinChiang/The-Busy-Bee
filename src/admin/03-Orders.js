@@ -53,6 +53,7 @@ class Orders extends Component {
                                 mobile: detail.val().mobile,
                                 email: detail.val().email,
                                 address: detail.val().address,
+                                province: detail.val().province,
                                 city: detail.val().city,
                                 payment_method: detail.val().payment_method,
                                 price: detail.val().price,
@@ -105,7 +106,7 @@ class Orders extends Component {
                 <td>{props[0].key} <br /><br /> {props[1].order_detail[0].order_details.timestamp}</td>
                 <td>{order_items()}</td>
                 <td>{props[1].order_detail[0].order_details.name} <br /><br /> {props[1].order_detail[0].order_details.email} <br /><br /> {props[1].order_detail[0].order_details.mobile}</td>
-                <td>{props[1].order_detail[0].order_details.address} <br /><br /> {props[1].order_detail[0].order_details.city}</td>
+                <td>{props[1].order_detail[0].order_details.address} <br /><br /> {props[1].order_detail[0].order_details.province} <br /><br /> {props[1].order_detail[0].order_details.city}</td>
                 <td>{props[1].order_detail[0].order_details.date}</td>
                 <td>P{props[1].order_detail[0].order_details.price}.00</td>
                 <td>{props[1].order_detail[0].order_details.payment_method}</td>

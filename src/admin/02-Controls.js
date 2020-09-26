@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import * as firebase from 'firebase'
 import '../admin_css/02-Controls.css'
+import helpers from '../client/tools'
 
 class Controls extends Component {
     state = {

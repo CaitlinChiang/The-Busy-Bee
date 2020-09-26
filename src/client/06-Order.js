@@ -17,7 +17,7 @@ class Order extends Component {
         orderID: 1,
         orders: [],
         payment_mediums: [],
-        cities: [],
+        provinces: [],
 
         // Order Details
         name: '',
@@ -25,6 +25,7 @@ class Order extends Component {
         email: '',
         order_type: '',
         address: '',
+        province: '',
         city: '',
         payment_method: '',
         date: ''
@@ -33,7 +34,7 @@ class Order extends Component {
     componentDidMount = _ => {
         this.price_set()
         this.orderID_set()
-        this.cities_fetch()
+        this.provinces_fetch()
         this.paymentMediums_fetch()
     }
 
@@ -63,13 +64,13 @@ class Order extends Component {
         })
     }
 
-    cities_fetch = _ => {
-        firebase.database().ref('cities').once('value', snapshot => {
+    provinces_fetch = _ => {
+        firebase.database().ref('provinces').once('value', snapshot => {
             snapshot.forEach((snap) => {
                 var obj = {
-                    city_name: snap.val().city_name
+                    province_name: snap.val().province_name
                 }
-                this.setState({ cities: this.state.cities.concat(obj) })
+                this.setState({ provinces: this.state.provinces.concat(obj) })
             })
         })
     }
@@ -88,7 +89,7 @@ class Order extends Component {
 
     // Save Data
     order_add = _ => {
-        const { cart, orderID, name, mobile, email, order_type, address, city, payment_method, date, price } = this.state
+        const { cart, orderID, name, mobile, email, order_type, address, province, city, payment_method, date, price } = this.state
 
         if (order_type === 'Pickup') {
             firebase.database().ref('orders').child(orderID).child('order_details').update({
@@ -118,6 +119,7 @@ class Order extends Component {
                 email: email,
                 order_type: order_type,
                 address: address,
+                province: province,
                 city: city,
                 payment_method: payment_method,
                 date: moment(date).format('YYYY-MM-DD'),
@@ -137,7 +139,7 @@ class Order extends Component {
     }
 
     order_confirmation = _ => {
-        const { cart, name, mobile, email, order_type, address, city, date, payment_method, payment_mediums } = this.state
+        const { cart, name, mobile, email, order_type, address, province, city, date, payment_method, payment_mediums } = this.state
 
         const order = _ => {
             for (let i = 0; i < payment_mediums.length; i++) {
@@ -145,7 +147,7 @@ class Order extends Component {
                     if (payment_mediums[i].account_number !== '') {
                         let confirmation = window.confirm(`You have chosen ${payment_mediums[i].payment_method} as your mode of payment. Account Number: ${payment_mediums[i].account_number}. Would you like to confirm your order?`)
                         if (confirmation) {
-                            alert("Kindly attach a screenshot of your proof of payment to: 0917 535 0923 (Viber)")
+                            alert("Kindly attach a screenshot of your proof of payment to: 0917 535 0923 (Viber). For deliveries, we will be messaging you shortly regarding the final amount inclusive of the delivery fee.")
                             this.order_add()
                             this.props.updateCart_clear()
                             this.clear()
@@ -154,7 +156,7 @@ class Order extends Component {
                     else {
                         let confirmation = window.confirm(`You have chosen ${payment_mediums[i].payment_method} as your mode of payment. Would you like to confirm your order?`)
                         if (confirmation) {
-                            alert("Kindly attach a screenshot of your proof of payment to: 0917 535 0923 (Viber)")
+                            alert("Kindly attach a screenshot of your proof of payment to: 0917 535 0923 (Viber). For deliveries, we will be messaging you shortly regarding the final amount inclusive of the delivery fee.")
                             this.order_add()
                             this.props.updateCart_clear()
                             this.clear()
@@ -172,7 +174,7 @@ class Order extends Component {
                 else alert("Kindly fill in all input fields.")
             }
             else if (order_type === 'Delivery') {
-                if (name.trim() !== '' && mobile.trim() !== '' && email.trim() !== '' && order_type.trim() !== '' && address.trim() !== '' && city.trim() !== '' && date.trim !== '' && payment_method.trim() !== '') {
+                if (name.trim() !== '' && mobile.trim() !== '' && email.trim() !== '' && order_type.trim() !== '' && address.trim() !== '' && province.trim() !== '' && city.trim() !== '' && date.trim !== '' && payment_method.trim() !== '') {
                     order()
                 }
                 else alert("Kindly fill in all input fields.")
@@ -218,6 +220,7 @@ class Order extends Component {
             email: '',
             order_type: '',
             address: '',
+            province: '',
             city: '',
             payment_method: '',
             date: ''
@@ -234,8 +237,17 @@ class Order extends Component {
         return date
     }
 
+    sortArray = (array) => {
+	    return array.sort((a, b) => {
+	        var x = a.province_name
+	        var y = b.province_name
+	        return ((x > y) ? 1 : ((x < y) ? -1 : 0));
+	    })
+	}
+
     render() {
-        const { cities, payment_mediums, price, name, mobile, email, order_type, address, city, payment_method, date } = this.state
+        const { provinces, payment_mediums, price, name, mobile, email, order_type, address, province, city, payment_method, date } = this.state
+        const Provinces = this.sortArray(provinces)
 
         return (
             <div>
@@ -264,10 +276,12 @@ class Order extends Component {
                                         <div>
                                             <input type="text" value={address} name="address" onChange={this.handleChange} placeholder="Delivery Address" required />
                                             
-                                            <select value={city} name="city" onChange={this.handleChange} required >
-                                                <option value="">--City--</option>
-                                                { cities.map(item => <option value={item.city_name}>{item.city_name}</option>) }
+                                            <select value={province} name="province" onChange={this.handleChange} required >
+                                                <option value="">--Province/Region--</option>
+                                                { this.sortArray(provinces).map(item => <option value={item.province_name}>{item.province_name}</option>) }
                                             </select>
+
+                                            <input type="text" value={city} name="city" onChange={this.handleChange} placeholder="City" required />
                                         </div>
                                     : null }
 

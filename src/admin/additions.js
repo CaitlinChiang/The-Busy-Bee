@@ -21,11 +21,11 @@ articles_add = _ => {
     })
 }
 
-city_add = _ => {
+province_add = _ => {
     let id_num = helpers.timestamp()
 
-    firebase.database().ref('cities').child(`${id_num}`).update({
-        city_name: ''
+    firebase.database().ref('provinces').child(`${id_num}`).update({
+        province_name: ''
     })
 }
 
