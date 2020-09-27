@@ -124,7 +124,9 @@
 	background: #f5cf54;
 	border-top-left-radius: 10px;
 	border-top-right-radius: 10px;
-	height: 20px;
+	height: 35px;
+	color: #fff;
+	font-size: 20px;
 }
 
 #modal-body {
@@ -142,10 +144,25 @@
 #modalDescription {
 	float: right;
 	width: 50%;
-	margin: 30px 20px 20px;
+	margin: 10px 20px 20px;
 	font-family: Helvetica, sans-serif;
 	color: #ffa48e;
 	font-size: 25px;
+}
+
+#modalDescription h2 {
+	margin-bottom: 15px;
+	margin-top: 10px;
+	font-size: 35px;
+}
+
+#modalDescription > p {
+	margin: 0;
+	font-size: 20px;
+}
+
+#modalDescription > p:last-of-type {
+	margin-bottom: 20px;
 }
 
 .modalSets {

@@ -15,8 +15,9 @@ class Products extends Component {
         modal_custom: false,
         options: [],
         modal_package3: false,
+        package_offer_3: [],
         modal_package8: false,
-        package_offer: []
+        package_offer_8: []
 	}
 
 	componentDidMount = _ => this.products_fetch()
@@ -106,7 +107,7 @@ class Products extends Component {
         }
     }
 
-    // // Special Offers
+    // Special Offers
     customModal_render = _ => {
         return (
             <div id="modal" class="specialOffer" onClick={() => this.setState({ modal_custom: false })}>
@@ -128,11 +129,11 @@ class Products extends Component {
     }
 
     package3Modal_render = _ => {
-        const { options, package_offer } = this.state
+        const { options, package_offer_3 } = this.state
 
         const add_product = _ => {
-            if (package_offer.length === 3) {
-                let product_values = package_offer.map(item => item.value)
+            if (package_offer_3.length === 3) {
+                let product_values = package_offer_3.map(item => item.value)
                 let products = product_values.join(', ')
                 this.product_add(products, 1080, 1)
             }
@@ -140,14 +141,17 @@ class Products extends Component {
         }
 
         return (
-            <div id="modal" class="specialOffer" onClick={() => this.setState({ modal_package3: false })}>
+            <div id="modal" class="specialOffer" onClick={() => this.setState({ modal_package3: false, package_offer_3: [] })}>
                 <div id="modal-content" onClick={this.stopPropagation}>
-                    <div id="modal-header"></div>
+                    <div id="modal-header">
+                        <p>***You may click on selected options more than 1x if you would like to repeat the scent!***</p>
+                    </div>
                     <div id="modal-body">
                         <img src='/images/bg5.jpeg' id="special_image" />
                         <div id="modalDescription">
                             <h2>Choose Any 3 Scents!</h2>
-                            <Select options={options} isMulti={true} value={package_offer} name="package_offer" onChange={this.handleSelectChange} />
+                            { package_offer_3.map(item => <p>{item.value}</p>) }
+                            <Select options={options} value={package_offer_3} name="package_offer_3" onChange={this.handleSelectChange_3} />
                             <button onClick={() => add_product()}>Add to Cart!</button>
                         </div>
                     </div>
@@ -158,15 +162,30 @@ class Products extends Component {
     }
 
     package8Modal_render = _ => {
+        const { options, package_offer_8 } = this.state
+
+        const add_product = _ => {
+            if (package_offer_8.length === 8) {
+                let product_values = package_offer_8.map(item => item.value)
+                let products = product_values.join(', ')
+                this.product_add(products, 2900, 1)
+            }
+            else alert("Kindly Select 8 Products!")
+        }
+
         return (
-            <div id="modal" class="specialOffer" onClick={() => this.setState({ modal_package8: false })}>
+            <div id="modal" class="specialOffer" onClick={() => this.setState({ modal_package8: false, package_offer_8: [] })}>
                 <div id="modal-content" onClick={this.stopPropagation}>
-                    <div id="modal-header"></div>
+                    <div id="modal-header">
+                        <p>***You may click on selected options more than 1x if you would like to repeat the scent!***</p>
+                    </div>
                     <div id="modal-body">
                         <img src='/images/bg8.jpeg' width="45%;" />
                         <div id="modalDescription">
-                            <h2>All 8 Scents!</h2>
-                            <button onClick={() => this.product_add('All Scents', 2900, 1)}>Add to Cart!</button>
+                            <h2>Choose Any 8 Scents!</h2>
+                            { package_offer_8.map(item => <p>{item.value}</p>) }
+                            <Select options={options} value={package_offer_8} name="package_offer_8" onChange={this.handleSelectChange_8} />
+                            <button onClick={() => add_product()}>Add to Cart!</button>
                         </div>
                     </div>
                     <div id="modal-footer"></div>
@@ -203,12 +222,24 @@ class Products extends Component {
 		this.setState({ [name]: value })
     }
 
-    handleSelectChange = option => {
+    handleSelectChange_3 = option => {
         this.setState(state => {
             return {
                 package_offer: option
             }
         })
+
+        this.setState({ package_offer_3: this.state.package_offer_3.concat(option) })
+    }
+
+    handleSelectChange_8 = option => {
+        this.setState(state => {
+            return {
+                package_offer: option
+            }
+        })
+
+        this.setState({ package_offer_8: this.state.package_offer_8.concat(option) })
     }
     
     stopPropagation = event => event.stopPropagation()
