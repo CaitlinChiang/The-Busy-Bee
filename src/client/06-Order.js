@@ -18,6 +18,7 @@ class Order extends Component {
         orders: [],
         payment_mediums: [],
         provinces: [],
+        ncr_cities: [],
 
         // Order Details
         name: '',
@@ -27,6 +28,7 @@ class Order extends Component {
         address: '',
         province: '',
         city: '',
+        ncr_city: '',
         payment_method: '',
         date: ''
     }
@@ -35,6 +37,7 @@ class Order extends Component {
         this.price_set()
         this.orderID_set()
         this.provinces_fetch()
+        this.ncr_fetch()
         this.paymentMediums_fetch()
     }
 
@@ -51,6 +54,7 @@ class Order extends Component {
             for (let i = 0; i < cart.length; i++) {
                 price += cart[i].price
             }
+            this.setState({ price: 0 })
             this.setState({ price })
         }
     }
@@ -65,12 +69,27 @@ class Order extends Component {
     }
 
     provinces_fetch = _ => {
-        firebase.database().ref('provinces').once('value', snapshot => {
+        firebase.database().ref('locations').once('value', snapshot => {
             snapshot.forEach((snap) => {
                 var obj = {
-                    province_name: snap.val().province_name
+                    province_name: snap.key
                 }
                 this.setState({ provinces: this.state.provinces.concat(obj) })
+            })
+        })
+    }
+
+    ncr_fetch = _ => {
+        firebase.database().ref('locations').child('NCR').once('value', snapshot => {
+            snapshot.forEach((snap) => {
+                var obj = {
+                    city_name: snap.key,
+                    city_fee_bottles8: snap.val().bottles_8,
+                    city_fee_bottles8COD: snap.val().bottles_8_COD,
+                    city_fee_bottles9: snap.val().bottles_9,
+                    city_fee_bottles9COD: snap.val().bottles_9_COD
+                }
+                this.setState({ ncr_cities: this.state.ncr_cities.concat(obj) })
             })
         })
     }
@@ -89,7 +108,7 @@ class Order extends Component {
 
     // Save Data
     order_add = _ => {
-        const { cart, orderID, name, mobile, email, order_type, address, province, city, payment_method, date, price } = this.state
+        const { cart, orderID, name, mobile, email, order_type, address, province, city, ncr_city, payment_method, date, price } = this.state
 
         if (order_type === 'Pickup') {
             firebase.database().ref('orders').child(orderID).child('order_details').update({
@@ -120,7 +139,7 @@ class Order extends Component {
                 order_type: order_type,
                 address: address,
                 province: province,
-                city: city,
+                city: ncr_city.trim() !== "" ? ncr_city : city,
                 payment_method: payment_method,
                 date: moment(date).format('YYYY-MM-DD'),
                 price: price,
@@ -139,7 +158,7 @@ class Order extends Component {
     }
 
     order_confirmation = _ => {
-        const { cart, name, mobile, email, order_type, address, province, city, date, payment_method, payment_mediums } = this.state
+        const { cart, name, mobile, email, order_type, address, province, city, ncr_city, date, payment_method, payment_mediums } = this.state
 
         const order = _ => {
             for (let i = 0; i < payment_mediums.length; i++) {
@@ -147,7 +166,7 @@ class Order extends Component {
                     if (payment_mediums[i].account_number !== '') {
                         let confirmation = window.confirm(`You have chosen ${payment_mediums[i].payment_method} as your mode of payment. Account Number: ${payment_mediums[i].account_number}. Would you like to confirm your order?`)
                         if (confirmation) {
-                            alert("Kindly attach a screenshot of your proof of payment to: 0917 535 0923 (Viber). For deliveries, we will be messaging you shortly regarding the final amount inclusive of the delivery fee.")
+                            alert("Kindly attach a screenshot of your proof of payment to: 0917 535 0923 (Viber). For deliveries, we will be messaging you shortly regarding the final amount inclusive of any possible additional delivery fee.")
                             this.order_add()
                             this.props.updateCart_clear()
                             this.clear()
@@ -156,7 +175,7 @@ class Order extends Component {
                     else {
                         let confirmation = window.confirm(`You have chosen ${payment_mediums[i].payment_method} as your mode of payment. Would you like to confirm your order?`)
                         if (confirmation) {
-                            alert("Kindly attach a screenshot of your proof of payment to: 0917 535 0923 (Viber). For deliveries, we will be messaging you shortly regarding the final amount inclusive of the delivery fee.")
+                            alert("Kindly attach a screenshot of your proof of payment to: 0917 535 0923 (Viber). For deliveries, we will be messaging you shortly regarding the final amount inclusive of any possible additional delivery fee.")
                             this.order_add()
                             this.props.updateCart_clear()
                             this.clear()
@@ -174,7 +193,7 @@ class Order extends Component {
                 else alert("Kindly fill in all input fields.")
             }
             else if (order_type === 'Delivery') {
-                if (name.trim() !== '' && mobile.trim() !== '' && email.trim() !== '' && order_type.trim() !== '' && address.trim() !== '' && province.trim() !== '' && city.trim() !== '' && date.trim !== '' && payment_method.trim() !== '') {
+                if (name.trim() !== '' && mobile.trim() !== '' && email.trim() !== '' && order_type.trim() !== '' && address.trim() !== '' && province.trim() !== '' && (city.trim() !== '' || ncr_city.trim() !== '') && date.trim !== '' && payment_method.trim() !== '') {
                     order()
                 }
                 else alert("Kindly fill in all input fields.")
@@ -210,7 +229,39 @@ class Order extends Component {
     handleChange = event => {
 		event.preventDefault()
 		const { name, value } = event.target
-        this.setState({ [name]: value })
+        this.setState({ [name]: value }, () => { this.NCR_cities() })
+    }
+
+    NCR_cities = _ => {
+        const { price, ncr_cities, payment_method, province, ncr_city } = this.state
+
+        if (province === "NCR") {
+            for (let i = 0; i < ncr_cities.length; i++) {
+                if (ncr_cities[i].city_name === ncr_city && payment_method !== "Cash on Delivery") {
+                    if (price > 2900 && price !== 3225 && price !== 3600) {
+                        this.price_set()
+                        this.setState(prevState => ({ price: prevState.price + ncr_cities[i].city_fee_bottles9 }))
+                    }
+                    else {
+                        this.price_set()
+                        this.setState(prevState => ({ price: prevState.price + ncr_cities[i].city_fee_bottles8 }))
+                    }
+                }
+                else if (ncr_cities[i].city_name === ncr_city && payment_method === "Cash on Delivery") {
+                    if (price > 2900 && price !== 3225 && price !== 3600) {
+                        this.price_set()
+                        this.setState(prevState => ({ price: prevState.price + ncr_cities[i].city_fee_bottles9COD }))
+                    }
+                    else {
+                        this.price_set()
+                        this.setState(prevState => ({ price: prevState.price + ncr_cities[i].city_fee_bottles8COD }))
+                    }
+                }
+            }
+        }
+        else {
+            this.price_set()
+        }
     }
 
     clear = _ => {
@@ -222,6 +273,7 @@ class Order extends Component {
             address: '',
             province: '',
             city: '',
+            ncr_city: '',
             payment_method: '',
             date: ''
         })
@@ -246,8 +298,7 @@ class Order extends Component {
 	}
 
     render() {
-        const { provinces, payment_mediums, price, name, mobile, email, order_type, address, province, city, payment_method, date } = this.state
-        const Provinces = this.sortArray(provinces)
+        const { provinces, ncr_cities, payment_mediums, price, name, mobile, email, order_type, address, province, city, ncr_city, payment_method, date } = this.state
 
         return (
             <div>
@@ -281,10 +332,17 @@ class Order extends Component {
                                                 { this.sortArray(provinces).map(item => <option value={item.province_name}>{item.province_name}</option>) }
                                             </select>
 
-                                            <input type="text" value={city} name="city" onChange={this.handleChange} placeholder="City" required />
+                                            { province === 'NCR' ?
+                                                <select value={ncr_city} name="ncr_city" onChange={this.handleChange} required > 
+                                                    <option value="">--City / Municipality--</option>
+                                                    { this.sortArray(ncr_cities).map(item => <option value={item.city_name}>{item.city_name}</option>) }
+                                                </select>
+                                            :
+                                                <input type="text" value={city} name="city" onChange={this.handleChange} placeholder="City" />
+                                            }
                                         </div>
                                     : null }
-
+                                    
                                     <select value={payment_method} name="payment_method" onChange={this.handleChange} required > 
                                         <option value="">--Payment Method--</option>
                                         { payment_mediums.map(this.paymentMediums_render) }

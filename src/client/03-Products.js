@@ -20,7 +20,7 @@ class Products extends Component {
         package_offer_8: []
 	}
 
-	componentDidMount = _ => this.products_fetch()
+    componentDidMount = _ => this.products_fetch()
     
     // Fetch Data
     products_fetch = _ => {
