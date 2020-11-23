@@ -47,7 +47,7 @@
     border-radius: 15px;
 }
 
-#panel select {
+#panel select, .panel_distributor select, .panel_distributor input {
     padding: 10px;
 	font-size: 18px;
     color: #3a0016;
@@ -58,7 +58,7 @@
     border-left: none;
 	outline-style: none;
 	text-align: center;
-	margin: 20px 50px 50px;
+	margin: 20px 30px 30px;
     display: inline-block;
 }
 
@@ -66,7 +66,7 @@
     color: #000; 
 }
 
-#panel button {
+#panel button, .panel_distributor button {
     border-radius: 5px;
     font-size: 20px;
     background: #ffd900;
@@ -75,6 +75,23 @@
     transition: all 0.5s ease;
 }
 
-#panel button:hover {
+#panel button:hover, .panel_distributor button:hover {
     background: #ffb546;
+}
+
+.panel_distributor {
+	background: #fff;
+    min-height: 300px;
+	border-radius: 15px;
+	width: 500px;
+	text-align: center;
+	margin: 50px auto;
+	padding-bottom: 30px;
+	display: block;
+}
+
+.panel_distributor > ul {
+	color: #000;
+	font-size: 16px;
+	margin-top: 50px;
 }

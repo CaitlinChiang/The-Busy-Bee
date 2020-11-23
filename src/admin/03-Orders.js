@@ -36,6 +36,7 @@ class Orders extends Component {
                                 name: detail.val().name,
                                 mobile: detail.val().mobile,
                                 email: detail.val().email,
+                                province: detail.val().province,
                                 payment_method: detail.val().payment_method,
                                 price: detail.val().price,
                                 date: detail.val().date,

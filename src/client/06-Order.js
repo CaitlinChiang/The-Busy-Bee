@@ -20,6 +20,11 @@ class Order extends Component {
         provinces: [],
         ncr_cities: [],
 
+        regionalDistributor: false,
+        regional_distributors: [],
+        provincialDistributor: false,
+        provincial_distributors: [],
+
         // Order Details
         name: '',
         mobile: '',
@@ -38,7 +43,7 @@ class Order extends Component {
         this.orderID_set()
         this.provinces_fetch()
         this.ncr_fetch()
-        this.paymentMediums_fetch()
+        this.distributors_fetch()
     }
 
     // Fetch Data
@@ -54,7 +59,6 @@ class Order extends Component {
             for (let i = 0; i < cart.length; i++) {
                 price += cart[i].price
             }
-            this.setState({ price: 0 })
             this.setState({ price })
         }
     }
@@ -72,9 +76,88 @@ class Order extends Component {
         firebase.database().ref('locations').once('value', snapshot => {
             snapshot.forEach((snap) => {
                 var obj = {
-                    province_name: snap.key
+                    province_name: snap.key,
+                    province_region: snap.val().province_region
                 }
                 this.setState({ provinces: this.state.provinces.concat(obj) })
+            })
+        })
+    }
+
+    distributors_fetch = _ => {
+        firebase.database().ref('distributors').once('value', snapshot => {
+            snapshot.forEach((snap) => {
+                if (snap.key == 'regions') {
+                    snap.forEach((region) => {
+                        let regional_distributor = []
+
+                        let key = region.key
+                        regional_distributor.push({ key })
+
+                        region.forEach((detail) => {
+                            if (detail.key == 'distributor') {
+                                let proof_account = ''
+                                proof_account = detail.val().proof
+                                regional_distributor.push({ proof_account })
+                            }
+
+                            if (detail.key == 'payment_methods') {
+                                let payment_mediums = []
+
+                                detail.forEach((medium) => {
+                                    var payment_medium = {
+                                        account_method: medium.val().account_method,
+                                        account_number: medium.val().account_number
+                                    }
+
+                                    payment_mediums.push({ payment_medium })
+                                })
+
+                                regional_distributor.push({ payment_mediums })
+                            }
+                        })
+
+                        this.setState({ regional_distributors: [...this.state.regional_distributors, ...[regional_distributor] ] })
+                    })
+                }
+            })
+        })
+
+        firebase.database().ref('distributors').once('value', snapshot => {
+            snapshot.forEach((snap) => {
+                if (snap.key == 'provinces') {
+                    snap.forEach((province) => {
+                        let provincial_distributor = []
+
+                        let key = province.key
+                        provincial_distributor.push({ key })
+
+                        province.forEach((detail) => {
+                            if (detail.key == 'distributor') {
+                                let proof_account = ''
+                                proof_account = detail.val().proof
+                                provincial_distributor.push({ proof_account })
+                            }
+
+                            if (detail.key == 'payment_methods') {
+                                let payment_mediums = []
+
+                                detail.forEach((medium) => {
+                                    var payment_medium = {
+                                        account_method: medium.val().account_method,
+                                        account_number: medium.val().account_number
+                                    }
+
+                                    payment_mediums.push({ payment_medium })
+                                })
+
+                                provincial_distributor.push({ payment_mediums })
+                            }
+                        })
+
+                        this.setState({ provincial_distributors: [...this.state.provincial_distributors, ...[provincial_distributor] ] })
+                    })
+                }
             })
         })
     }
@@ -116,6 +199,7 @@ class Order extends Component {
                 mobile: mobile,
                 email: email,
                 order_type: order_type,
+                province: province,
                 payment_method: payment_method,
                 date: moment(date).format('YYYY-MM-DD').substring(0, 10),
                 price: price,
@@ -158,27 +242,66 @@ class Order extends Component {
     }
 
     order_confirmation = _ => {
-        const { cart, name, mobile, email, order_type, address, province, city, ncr_city, date, payment_method, payment_mediums } = this.state
+        const { cart, name, mobile, email, order_type, address, province, city, ncr_city, date, payment_method, payment_mediums, proof_account, provincialDistributor, regionalDistributor, provincial_distributors, regional_distributors } = this.state
+
+        const proof = _ => {
+            if (provincialDistributor === true) {
+                for (let i = 0; i < provincial_distributors.length; i++) {
+                    if (provincial_distributors[i][0].key == province) {
+                        return provincial_distributors[i][1].proof_account
+                    }
+                }
+            }
+            else if (regionalDistributor === true) {
+                for (let i = 0; i < regional_distributors.length; i++) {
+                    if (regional_distributors[i][0].key == province) {
+                        return regional_distributors[i][1].proof_account
+                    }
+                }
+            }
+        }
 
         const order = _ => {
             for (let i = 0; i < payment_mediums.length; i++) {
                 if (payment_mediums[i].payment_method === payment_method) {
-                    if (payment_mediums[i].account_number !== '') {
-                        let confirmation = window.confirm(`You have chosen ${payment_mediums[i].payment_method} as your mode of payment. Account Number: ${payment_mediums[i].account_number}. Would you like to confirm your order?`)
-                        if (confirmation) {
-                            alert("Kindly attach a screenshot of your proof of payment to: 0917 535 0923 (Viber). For deliveries, we will be messaging you shortly regarding the final amount inclusive of any possible additional delivery fee.")
-                            this.order_add()
-                            this.props.updateCart_clear()
-                            this.clear()
+                    if (provincialDistributor === true || regionalDistributor === true) {
+                        if (payment_mediums[i].account_number !== '') {
+                            let confirmation = window.confirm(`You have chosen ${payment_mediums[i].payment_method} as your mode of payment. Account Number: ${payment_mediums[i].account_number}. Would you like to confirm your order?`)
+                            if (confirmation) {
+                                alert(`Kindly attach a screenshot of your proof of payment to: ${proof()} (Viber). For deliveries, we will be messaging you shortly regarding the final amount inclusive of any possible additional delivery fee.`)
+                                this.order_add()
+                                this.props.updateCart_clear()
+                                this.clear()
+                            }
+                        }
+                        else {
+                            let confirmation = window.confirm(`You have chosen ${payment_mediums[i].payment_method} as your mode of payment. Would you like to confirm your order?`)
+                            if (confirmation) {
+                                alert(`Kindly attach a screenshot of your proof of payment to: ${proof()} (Viber). For deliveries, we will be messaging you shortly regarding the final amount inclusive of any possible additional delivery fee.`)
+                                this.order_add()
+                                this.props.updateCart_clear()
+                                this.clear()
+                            }
                         }
                     }
                     else {
-                        let confirmation = window.confirm(`You have chosen ${payment_mediums[i].payment_method} as your mode of payment. Would you like to confirm your order?`)
-                        if (confirmation) {
-                            alert("Kindly attach a screenshot of your proof of payment to: 0917 535 0923 (Viber). For deliveries, we will be messaging you shortly regarding the final amount inclusive of any possible additional delivery fee.")
-                            this.order_add()
-                            this.props.updateCart_clear()
-                            this.clear()
+                        if (payment_mediums[i].account_number !== '') {
+                            let confirmation = window.confirm(`You have chosen ${payment_mediums[i].payment_method} as your mode of payment. Account Number: ${payment_mediums[i].account_number}. Would you like to confirm your order?`)
+                            if (confirmation) {
+                                alert("Kindly attach a screenshot of your proof of payment to: 0917 535 0923 (Viber). For deliveries, we will be messaging you shortly regarding the final amount inclusive of any possible additional delivery fee.")
+                                this.order_add()
+                                this.props.updateCart_clear()
+                                this.clear()
+                            }
+                        }
+                        else {
+                            let confirmation = window.confirm(`You have chosen ${payment_mediums[i].payment_method} as your mode of payment. Would you like to confirm your order?`)
+                            if (confirmation) {
+                                alert("Kindly attach a screenshot of your proof of payment to: 0917 535 0923 (Viber). For deliveries, we will be messaging you shortly regarding the final amount inclusive of any possible additional delivery fee.")
+                                this.order_add()
+                                this.props.updateCart_clear()
+                                this.clear()
+                            }
                         }
                     }
                 }
@@ -187,7 +310,7 @@ class Order extends Component {
 
         if (cart.length > 0) {
             if (order_type === 'Pickup') {
-                if (name.trim() !== '' && mobile.trim() !== '' && email.trim() !== '' && order_type.trim() !== '' && date !== '' && payment_method.trim() !== '') {
+                if (name.trim() !== '' && mobile.trim() !== '' && email.trim() !== '' && order_type.trim() !== '' && province.trim() !== '' && date !== '' && payment_method.trim() !== '') {
                     order()
                 }
                 else alert("Kindly fill in all input fields.")
@@ -205,8 +328,8 @@ class Order extends Component {
 
     // Render Data
     paymentMediums_render = props => {
-        const { order_type } = this.state
-
+        const { order_type, province, ncr_city } = this.state
+       
         if (order_type === 'Pickup') {
             if (props.payment_method !== 'Cash on Delivery') {
                 return <option value={props.payment_method}>{props.payment_method}</option>
@@ -214,7 +337,14 @@ class Order extends Component {
         }
         else if (order_type === 'Delivery') {
             if (props.payment_method !== 'Payment on Pickup') {
-                return <option value={props.payment_method}>{props.payment_method}</option>
+                if (province === 'NCR' && (ncr_city !== 'Cainta' && ncr_city !== 'Antipolo' && ncr_city !== 'Taytay' && ncr_city !== 'San Mateo' && ncr_city !== 'Santa Rosa')) {  
+                    return <option value={props.payment_method}>{props.payment_method}</option>
+                }
+                else {
+                    if (props.payment_method !== 'Cash on Delivery') {
+                        return <option value={props.payment_method}>{props.payment_method}</option>
+                    }
+                }
             }
         }
     }
@@ -229,7 +359,7 @@ class Order extends Component {
     handleChange = event => {
 		event.preventDefault()
 		const { name, value } = event.target
-        this.setState({ [name]: value }, () => { this.NCR_cities() })
+        this.setState({ [name]: value }, () => { this.NCR_cities(); this.distributor_paymentMediums() })
     }
 
     NCR_cities = _ => {
@@ -239,20 +369,24 @@ class Order extends Component {
             for (let i = 0; i < ncr_cities.length; i++) {
                 if (ncr_cities[i].city_name === ncr_city && payment_method !== "Cash on Delivery") {
                     if (price > 2900 && price !== 3225 && price !== 3600) {
+                        this.setState({ price: 0 })
                         this.price_set()
                         this.setState(prevState => ({ price: prevState.price + ncr_cities[i].city_fee_bottles9 }))
                     }
                     else {
+                        this.setState({ price: 0 })
                         this.price_set()
                         this.setState(prevState => ({ price: prevState.price + ncr_cities[i].city_fee_bottles8 }))
                     }
                 }
                 else if (ncr_cities[i].city_name === ncr_city && payment_method === "Cash on Delivery") {
                     if (price > 2900 && price !== 3225 && price !== 3600) {
+                        this.setState({ price: 0 })
                         this.price_set()
                         this.setState(prevState => ({ price: prevState.price + ncr_cities[i].city_fee_bottles9COD }))
                     }
                     else {
+                        this.setState({ price: 0 })
                         this.price_set()
                         this.setState(prevState => ({ price: prevState.price + ncr_cities[i].city_fee_bottles8COD }))
                     }
@@ -261,6 +395,77 @@ class Order extends Component {
         }
         else {
             this.price_set()
+        }
+    }
+
+    distributor_paymentMediums = _ => {
+        const { province, provinces, provincial_distributors, regional_distributors } = this.state
+
+        const paymentMediums_provincial = _ => {
+            let paymentMediums = []
+
+            for (let i = 0; i < provincial_distributors.length; i++) {
+                if (provincial_distributors[i][0].key == province) {
+                    for (let j = 0; j < provincial_distributors[i][2].payment_mediums.length; j++) {
+                        var obj = {
+                            payment_method: provincial_distributors[i][2].payment_mediums[j].payment_medium.account_method,
+                            account_number: provincial_distributors[i][2].payment_mediums[j].payment_medium.account_number
+                        }
+                        paymentMediums.push(obj)
+                    }
+                }
+            }
+            
+            this.setState({ payment_mediums: paymentMediums.map(item => item) })
+        }
+
+        const paymentMediums_regional = _ => {
+            let paymentMediums = []
+
+            for (let i = 0; i < regional_distributors.length; i++) {
+                if (regional_distributors[i][0].key == region) {
+                    for (let j = 0; j < regional_distributors[i][2].payment_mediums.length; j++) {
+                        var obj = {
+                            payment_method: regional_distributors[i][2].payment_mediums[j].payment_medium.account_method,
+                            account_number: regional_distributors[i][2].payment_mediums[j].payment_medium.account_number
+                        }
+                        paymentMediums.push(obj)
+                    }
+                }
+            }
+            
+            this.setState({ payment_mediums: paymentMediums.map(item => item) })
+        }
+
+        let check_provinces = []
+        for (let i = 0; i < provincial_distributors.length; i++) {
+            check_provinces.push(provincial_distributors[i][0].key)
+        }
+
+        let check_regions = []
+        for (let i = 0; i < regional_distributors.length; i++) {
+            check_regions.push(regional_distributors[i][0].key)
+        }
+        
+        let region = ''
+        for (let i = 0; i < provinces.length; i++) {
+            if (provinces[i].province_name == province) {
+                region = provinces[i].province_region
+            }
+        }
+
+        if (check_provinces.includes(province)) {
+            this.setState({ provincialDistributor: true, regionalDistributor: false })
+            paymentMediums_provincial()
+        }
+        else if (check_regions.includes(region)) {
+            this.setState({ regionalDistributor: true, provincialDistributor: false })
+            paymentMediums_regional()
+        }
+        else {
+            this.setState({ provincialDistributor: false, regionalDistributor: false })
+            this.setState({ payment_mediums: [] })
+            this.paymentMediums_fetch()
         }
     }
 
@@ -323,15 +528,20 @@ class Order extends Component {
 
                             { order_type !== '' ?
                                 <div>
+                                    <select value={province} name="province" onChange={this.handleChange} required >
+                                        <option value="">--Province/Region--</option>
+                                        { this.sortArray(provinces).map(item => <option value={item.province_name}>{item.province_name}</option>) }
+                                    </select>
+                                    
+                                    <select value={payment_method} name="payment_method" onChange={this.handleChange} required > 
+                                        <option value="">--Payment Method--</option>
+                                        { payment_mediums.map(this.paymentMediums_render) }
+                                    </select>
+
                                     { order_type === 'Delivery' ?
                                         <div>
                                             <input type="text" value={address} name="address" onChange={this.handleChange} placeholder="Delivery Address" required />
                                             
-                                            <select value={province} name="province" onChange={this.handleChange} required >
-                                                <option value="">--Province/Region--</option>
-                                                { this.sortArray(provinces).map(item => <option value={item.province_name}>{item.province_name}</option>) }
-                                            </select>
-
                                             { province === 'NCR' ?
                                                 <select value={ncr_city} name="ncr_city" onChange={this.handleChange} required > 
                                                     <option value="">--City / Municipality--</option>
@@ -342,11 +552,6 @@ class Order extends Component {
                                             }
                                         </div>
                                     : null }
-                                    
-                                    <select value={payment_method} name="payment_method" onChange={this.handleChange} required > 
-                                        <option value="">--Payment Method--</option>
-                                        { payment_mediums.map(this.paymentMediums_render) }
-                                    </select>
                                 </div>
                             : null }
 
