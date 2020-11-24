@@ -32,6 +32,7 @@ class Order extends Component {
         order_type: '',
         address: '',
         province: '',
+        region: '',
         city: '',
         ncr_city: '',
         payment_method: '',
@@ -242,7 +243,7 @@ class Order extends Component {
     }
 
     order_confirmation = _ => {
-        const { cart, name, mobile, email, order_type, address, province, city, ncr_city, date, payment_method, payment_mediums, proof_account, provincialDistributor, regionalDistributor, provincial_distributors, regional_distributors } = this.state
+        const { cart, name, mobile, email, order_type, address, province, region, city, ncr_city, date, payment_method, payment_mediums, proof_account, provincialDistributor, regionalDistributor, provincial_distributors, regional_distributors } = this.state
 
         const proof = _ => {
             if (provincialDistributor === true) {
@@ -307,23 +308,249 @@ class Order extends Component {
                 }
             }
         }
-
-        if (cart.length > 0) {
-            if (order_type === 'Pickup') {
-                if (name.trim() !== '' && mobile.trim() !== '' && email.trim() !== '' && order_type.trim() !== '' && province.trim() !== '' && date !== '' && payment_method.trim() !== '') {
-                    order()
-                }
-                else alert("Kindly fill in all input fields.")
+        
+        const subtract_inventory = cart_array => {
+            if (provincialDistributor === true) {
+                firebase.database().ref('distributors').child('provinces').child(province).child('products').once('value', snapshot => {
+                    snapshot.forEach((snap) => {
+                        for (let i = 0; i < cart_array.length; i++) {
+                            if (cart_array[i].product_name == snap.key) {
+                                let original_amount = parseInt(snap.val().amount)
+                                firebase.database().ref('distributors').child('provinces').child(province).child('products').child(snap.key).update({ amount: original_amount - cart_array[i].product_quantity })
+                            }
+                        }
+                    })
+                })
+                
             }
-            else if (order_type === 'Delivery') {
-                if (name.trim() !== '' && mobile.trim() !== '' && email.trim() !== '' && order_type.trim() !== '' && address.trim() !== '' && province.trim() !== '' && (city.trim() !== '' || ncr_city.trim() !== '') && date.trim !== '' && payment_method.trim() !== '') {
-                    order()
-                }
-                else alert("Kindly fill in all input fields.")
+            else if (regionalDistributor === true) {
+                firebase.database().ref('distributors').child('regions').child(region).child('products').once('value', snapshot => {
+                    snapshot.forEach((snap) => {
+                        for (let i = 0; i < cart_array.length; i++) {
+                            if (cart_array[i].product_name == snap.key) {
+                                let original_amount = parseInt(snap.val().amount)
+                                firebase.database().ref('distributors').child('regions').child(region).child('products').child(snap.key).update({ amount: original_amount - cart_array[i].product_quantity })
+                            }
+                        }
+                    })
+                })
             }
-            else alert("Kindly fill in all input fields.")
+            else if (provincialDistributor === false && regionalDistributor === false) {
+                firebase.database().ref('products').once('value', snapshot => {
+                    snapshot.forEach((snap) => {
+                        for (let i = 0; i < cart_array.length; i++) {
+                            if (cart_array[i].product_name == snap.val().product_name) {
+                                let original_amount = parseInt(snap.val().amount)
+                                firebase.database().ref('products').child(snap.key).update({ amount: original_amount - cart_array[i].product_quantity })
+                            }
+                        }
+                    })
+                })
+            }
         }
-        else alert("Your cart is empty.")
+
+        const check_inventory = _ => {
+            if (provincialDistributor === true) {
+                firebase.database().ref('distributors').child('provinces').child(province).child('products').once('value', snapshot => {
+                    let check_cart = []
+
+                    for (let i = 0; i < cart.length; i++) {
+                        if (cart[i].product_name.includes(',')) {
+                            let array = cart[i].product_name.split(',')
+
+                            for (let j = 0; j < array.length; j++) {
+                                var obj_split = {
+                                    product_name: array[j].trim(),
+                                    quantity: cart[i].quantity
+                                }
+                                check_cart.push(obj_split)
+                            }
+                        }
+                        else {
+                            var obj_notSplit = {
+                                product_name: cart[i].product_name,
+                                quantity: cart[i].quantity
+                            }
+                            check_cart.push(obj_notSplit)
+                        }
+                    }
+
+                    let all_available = true
+                    let cart_items = []
+                    
+                    snapshot.forEach((snap) => {
+                        let product_name = ''
+                        let inventory_quantity = 0
+                        let order_quantity = []
+                        
+                        for (let i = 0; i < check_cart.length; i++) {
+                            if (check_cart[i].product_name == snap.key) {
+                                product_name = snap.key
+                                inventory_quantity = snap.val().amount
+                                order_quantity.push(check_cart[i].quantity)
+                            }
+                        }
+
+                        let cart_quantity = order_quantity.reduce((a, b) => parseInt(a) + parseInt(b), 0)
+                        if (cart_quantity > parseInt(inventory_quantity)) {
+                            all_available = false
+                            alert(`Sorry, we only have ${inventory_quantity} stock of ${product_name} at ${province}. Your order is at quantity ${cart_quantity}.`)
+                        }
+                        else {
+                            var cart_item = {
+                                product_name: product_name,
+                                product_quantity: cart_quantity
+                            }
+                            if (cart_item.product_name.trim() !== '') cart_items.push(cart_item)
+                        }
+                    })
+                    if (all_available) {
+                        subtract_inventory(cart_items)
+                        order()
+                    }
+                })
+            }
+            else if (regionalDistributor === true) {
+                firebase.database().ref('distributors').child('regions').child(region).child('products').once('value', snapshot => {
+                    let check_cart = []
+
+                    for (let i = 0; i < cart.length; i++) {
+                        if (cart[i].product_name.includes(',')) {
+                            let array = cart[i].product_name.split(',')
+
+                            for (let j = 0; j < array.length; j++) {
+                                var obj_split = {
+                                    product_name: array[j].trim(),
+                                    quantity: cart[i].quantity
+                                }
+                                check_cart.push(obj_split)
+                            }
+                        }
+                        else {
+                            var obj_notSplit = {
+                                product_name: cart[i].product_name,
+                                quantity: cart[i].quantity
+                            }
+                            check_cart.push(obj_notSplit)
+                        }
+                    }
+
+                    let all_available = true
+                    let cart_items = []
+                    
+                    snapshot.forEach((snap) => {
+                        let product_name = ''
+                        let inventory_quantity = 0
+                        let order_quantity = []
+                        
+                        for (let i = 0; i < check_cart.length; i++) {
+                            if (check_cart[i].product_name == snap.key) {
+                                product_name = snap.key
+                                inventory_quantity = snap.val().amount
+                                order_quantity.push(check_cart[i].quantity)
+                            }
+                        }
+
+                        let cart_quantity = order_quantity.reduce((a, b) => parseInt(a) + parseInt(b), 0)
+                        if (cart_quantity > parseInt(inventory_quantity)) {
+                            all_available = false
+                            alert(`Sorry, we only have ${inventory_quantity} stock of ${product_name} at ${province}. Your order is at quantity ${cart_quantity}.`)
+                        }
+                        else {
+                            var cart_item = {
+                                product_name: product_name,
+                                product_quantity: cart_quantity
+                            }
+                            if (cart_item.product_name.trim() !== '') cart_items.push(cart_item)
+                        }
+                    })
+
+                    if (all_available) {
+                        subtract_inventory(cart_items)
+                        order()
+                    }
+                })
+            }
+            else if (regionalDistributor === false && provincialDistributor === false) {
+                firebase.database().ref('products').once('value', snapshot => {
+                    let check_cart = []
+
+                    for (let i = 0; i < cart.length; i++) {
+                        if (cart[i].product_name.includes(',')) {
+                            let array = cart[i].product_name.split(',')
+
+                            for (let j = 0; j < array.length; j++) {
+                                var obj_split = {
+                                    product_name: array[j].trim(),
+                                    quantity: cart[i].quantity
+                                }
+                                check_cart.push(obj_split)
+                            }
+                        }
+                        else {
+                            var obj_notSplit = {
+                                product_name: cart[i].product_name,
+                                quantity: cart[i].quantity
+                            }
+                            check_cart.push(obj_notSplit)
+                        }
+                    }
+
+                    let all_available = true
+                    let cart_items = []
+                    
+                    snapshot.forEach((snap) => {
+                        let product_name = ''
+                        let inventory_quantity = 0
+                        let order_quantity = []
+                        
+                        for (let i = 0; i < check_cart.length; i++) {
+                            if (check_cart[i].product_name == snap.val().product_name) {
+                                product_name = snap.val().product_name
+                                inventory_quantity = snap.val().amount
+                                order_quantity.push(check_cart[i].quantity)
+                            }
+                        }
+
+                        let cart_quantity = order_quantity.reduce((a, b) => parseInt(a) + parseInt(b), 0)
+                        if (cart_quantity > parseInt(inventory_quantity)) {
+                            all_available = false
+                            alert(`Sorry, we only have ${inventory_quantity} stock of ${product_name} at ${province}. Your order is at quantity ${cart_quantity}.`)
+                        }
+                        else {
+                            var cart_item = {
+                                product_name: product_name,
+                                product_quantity: cart_quantity
+                            }
+                            if (cart_item.product_name.trim() !== '') cart_items.push(cart_item)
+                        }
+                    })
+                    if (all_available) {
+                        subtract_inventory(cart_items)
+                        order()
+                    }
+                })
+            }
+        }
+
+        // if (cart.length > 0) {
+        //     if (order_type === 'Pickup') {
+        //         if (name.trim() !== '' && mobile.trim() !== '' && email.trim() !== '' && order_type.trim() !== '' && province.trim() !== '' && date !== '' && payment_method.trim() !== '') {
+        //             check_inventory()
+        //         }
+        //         else alert("Kindly fill in all input fields.")
+        //     }
+        //     //&& address.trim() !== ''
+        //     else if (order_type === 'Delivery') {
+        //         if (name.trim() !== '' && mobile.trim() !== '' && email.trim() !== '' && order_type.trim() !== ''  && province.trim() !== '' && (city.trim() !== '' || ncr_city.trim() !== '') && date.trim !== '' && payment_method.trim() !== '') {
+        //             check_inventory()
+        //         }
+        //         else alert("Kindly fill in all input fields.")
+        //     }
+        //     else alert("Kindly fill in all input fields.")
+        // }
+        // else alert("Your cart is empty.")
+        check_inventory()
     }
 
     // Render Data
@@ -434,7 +661,10 @@ class Order extends Component {
                 }
             }
             
-            this.setState({ payment_mediums: paymentMediums.map(item => item) })
+            this.setState({ 
+                payment_mediums: paymentMediums.map(item => item),
+                region: region
+            })
         }
 
         let check_provinces = []

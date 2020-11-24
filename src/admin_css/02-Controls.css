@@ -92,6 +92,16 @@
 
 .panel_distributor > ul {
 	color: #000;
-	font-size: 16px;
+	font-size: 18px;
 	margin-top: 50px;
+	padding-top: 20px;
+}
+
+.panel_distributor > ul li {
+	margin-top: 15px;
+}
+
+.panel_distributor > ul li input[type=number] {
+	width: 50px;
+	margin: 0 10px;
 }

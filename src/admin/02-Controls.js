@@ -29,7 +29,11 @@ class Controls extends Component {
     products_fetch = _ => {
         firebase.database().ref('products').once('value', snapshot => {
             snapshot.forEach((snap) => {
-                this.setState({ products: this.state.products.concat(snap.val().product_name) })
+                var obj = {
+                    product_name: snap.val().product_name,
+                    product_amount: snap.val().amount
+                }
+                this.setState({ products: this.state.products.concat(obj) })
             })
         })
     }
@@ -54,7 +58,7 @@ class Controls extends Component {
 
     // Add Data
     distributor_add = place => {
-        const { region, province, username_regional, password_regional, proof_regional, username_provincial, password_provincial, proof_provincial } = this.state
+        const { region, province, username_regional, password_regional, proof_regional, username_provincial, password_provincial, proof_provincial, products } = this.state
 
         if (place === 'regional') {
             if (region.trim() !== '' && username_regional.trim() !== '' && password_regional.trim() !== '' && proof_regional.trim() !== '') {
@@ -66,6 +70,10 @@ class Controls extends Component {
                         password: password_regional,
                         proof: proof_regional
                     })
+
+                    for (let i = 0; i < products.length; i++) {
+                        firebase.database().ref('distributors').child('regions').child(region).child('products').child(products[i]).update({ amount: 0 })
+                    }
                 }
             }
             else alert("Please fill in all needed input fields.")
@@ -80,6 +88,10 @@ class Controls extends Component {
                         password: password_provincial,
                         proof: proof_provincial
                     })
+
+                    for (let i = 0; i < products.length; i++) {
+                        firebase.database().ref('distributors').child('regions').child(region).child('products').child(products[i]).update({ amount: 0 })
+                    }
                 }
             }
             else alert("Please fill in all needed input fields.")
@@ -111,6 +123,18 @@ class Controls extends Component {
         event.preventDefault()
         const { name, value } = event.target
         this.setState({ [name]: value })
+    }
+
+    handleProductChange = (product, amount) => {
+        firebase.database().ref('products').once('value', snapshot => {
+            snapshot.forEach((snap) => {
+                if (product == snap.val().product_name) {
+                    firebase.database().ref('products').child(snap.key).update({
+                        amount: amount
+                    })
+                }
+            })
+        })
     }
 
     sortArray = (array) => {
@@ -145,10 +169,21 @@ class Controls extends Component {
                         <div id="panel">
                             <select value={product} name="product" onChange={this.handleChange}>
                                 <option value="">--Choose Product--</option>
-                                { products.map(item => <option value={item}>{item}</option>) }
+                                { products.map(item => <option value={item.product_name}>{item.product_name}</option>) }
                             </select>
                             <button onClick={() => this.stock_change('available')}>In Stock</button>
                             <button onClick={() => this.stock_change('not-available')}>Out of Stock</button>
+                        </div>
+
+                        <div class="panel_distributor">
+                            <ul>
+                                { products.map(item => 
+                                    <li>
+                                        {item.product_name}:
+                                        <input type="number" min="0" defaultValue={item.product_amount} onChange={(event) => this.handleProductChange(item.product_name, event.target.value)} />
+                                    </li>
+                                )}
+                            </ul>
                         </div>
 
                         <div class="panel_distributor">

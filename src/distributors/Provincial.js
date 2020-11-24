@@ -19,6 +19,7 @@ class Provincial_Distributor extends Component {
         account_number: '',
         payment_methods: [],
         available_payment_methods: [],
+        products: [],
 
         dateFilter: '',
         arrangement: '',
@@ -46,6 +47,7 @@ class Provincial_Distributor extends Component {
         this.orders_fetch()
         this.paymentMethods_fetch()
         this.available_paymentMethods_fetch()
+        this.products_fetch()
     }
 
     // Fetch Data
@@ -142,6 +144,35 @@ class Provincial_Distributor extends Component {
         })
     }
 
+    products_fetch = _ => {
+        firebase.database().ref('distributors').child('provinces').child(this.state.province).child('products').once('value', snapshot => {
+            snapshot.forEach((snap) => {
+                var obj = {
+                    product_name: snap.key,
+                    product_amount: snap.val().amount
+                }
+                this.setState({ products: this.state.products.concat(obj) })
+            })
+            this.products_sync()
+        })
+    }
+
+    products_sync = _ => {
+        const { province, products } = this.state
+
+        let check_currentProducts = []
+        for (let i = 0; i < products.length; i++) {
+            check_currentProducts.push(products[i].product_name)
+        }
+
+        firebase.database().ref('products').once('value', snapshot => {
+            snapshot.forEach((snap) => {
+                if (!check_currentProducts.includes(snap.val().product_name)) {
+                    firebase.database().ref('distributors').child('provinces').child(province).child('products').child(snap.val().product_name).update({ amount: 0 })
+                }
+            })
+        })
+    }
 
     // Render Data
     orders_render = props => {
@@ -258,8 +289,12 @@ class Provincial_Distributor extends Component {
         this.setState({ [name]: value })
     }
 
+    handleProductChange = (product, amount) => {
+        firebase.database().ref('distributors').child('provinces').child(this.state.province).child('products').child(product).update({ amount: amount })
+    }
+
     render() {
-        const { password_check, orders, dateFilter, arrangement, orderStatus, paymentStatus, orderType, account_method, available_payment_methods, account_number, payment_methods } = this.state
+        const { password_check, orders, dateFilter, arrangement, orderStatus, paymentStatus, orderType, account_method, available_payment_methods, account_number, payment_methods, products } = this.state
 
         return (
             <section id="admin_orders">
@@ -323,6 +358,17 @@ class Provincial_Distributor extends Component {
 
                         <div>
                             <div class="panel_distributor">
+                                <ul>
+                                    { products.map(item => 
+                                        <li>
+                                            {item.product_name}:
+                                            <input type="number" min="0" defaultValue={item.product_amount} onChange={(event) => this.handleProductChange(item.product_name, event.target.value)} />
+                                        </li>
+                                    )}
+                                </ul>
+                            </div>
+
+                            <div class="panel_distributor">
                                 <select value={account_method} name="account_method" onChange={this.handleChange} >
                                     <option value="">--Payment Methods--</option>
                                     { available_payment_methods.map(item => <option value={item}>{item}</option>) }
@@ -332,9 +378,6 @@ class Provincial_Distributor extends Component {
                                 <ul>
                                     { payment_methods.map(item => <li>{item.account_method}: {item.account_number}</li>) }
                                 </ul>
-                            </div>
-                            <div class="panel_distributor">
-
                             </div>
                         </div>
                     </div>

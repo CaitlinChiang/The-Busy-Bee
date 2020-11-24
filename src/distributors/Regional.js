@@ -20,6 +20,7 @@ class Regional_Distributor extends Component {
         account_number: '',
         payment_methods: [],
         available_payment_methods: [],
+        products: [],
 
         dateFilter: '',
         arrangement: '',
@@ -48,6 +49,7 @@ class Regional_Distributor extends Component {
         this.orders_fetch()
         this.paymentMethods_fetch()
         this.available_paymentMethods_fetch()
+        this.products_fetch()
     }
 
     // Fetch Data
@@ -155,6 +157,36 @@ class Regional_Distributor extends Component {
         firebase.database().ref('payment_methods').once('value', snapshot => {
             snapshot.forEach((snap) => {
                 this.setState({ available_payment_methods: this.state.available_payment_methods.concat(snap.val().account_method) })
+            })
+        })
+    }
+
+    products_fetch = _ => {
+        firebase.database().ref('distributors').child('regions').child(this.state.region).child('products').once('value', snapshot => {
+            snapshot.forEach((snap) => {
+                var obj = {
+                    product_name: snap.key,
+                    product_amount: snap.val().amount
+                }
+                this.setState({ products: this.state.products.concat(obj) })
+            })
+            this.products_sync()
+        })
+    }
+
+    products_sync = _ => {
+        const { region, products } = this.state
+
+        let check_currentProducts = []
+        for (let i = 0; i < products.length; i++) {
+            check_currentProducts.push(products[i].product_name)
+        }
+
+        firebase.database().ref('products').once('value', snapshot => {
+            snapshot.forEach((snap) => {
+                if (!check_currentProducts.includes(snap.val().product_name)) {
+                    firebase.database().ref('distributors').child('regions').child(region).child('products').child(snap.val().product_name).update({ amount: 0 })
+                }
             })
         })
     }
@@ -275,8 +307,12 @@ class Regional_Distributor extends Component {
         this.setState({ [name]: value })
     }
 
+    handleProductChange = (product, amount) => {
+        firebase.database().ref('distributors').child('regions').child(this.state.region).child('products').child(product).update({ amount: amount })
+    }
+
     render() {
-        const { password_check, orders, account_number, account_method, payment_methods, available_payment_methods, dateFilter, arrangement, orderStatus, paymentStatus, orderType } = this.state
+        const { password_check, orders, account_number, account_method, payment_methods, products, available_payment_methods, dateFilter, arrangement, orderStatus, paymentStatus, orderType } = this.state
 
         return (
             <section id="admin_orders">
@@ -340,6 +376,17 @@ class Regional_Distributor extends Component {
 
                         <div>
                             <div class="panel_distributor">
+                                <ul>
+                                    { products.map(item => 
+                                        <li>
+                                            {item.product_name}:
+                                            <input type="number" min="0" defaultValue={item.product_amount} onChange={(event) => this.handleProductChange(item.product_name, event.target.value)} />
+                                        </li>
+                                    )}
+                                </ul>
+                            </div>
+
+                            <div class="panel_distributor">
                                 <select value={account_method} name="account_method" onChange={this.handleChange} >
                                     <option value="">--Payment Methods--</option>
                                     { available_payment_methods.map(item => <option value={item}>{item}</option>) }
@@ -349,9 +396,6 @@ class Regional_Distributor extends Component {
                                 <ul>
                                     { payment_methods.map(item => <li>{item.account_method}: {item.account_number}</li>) }
                                 </ul>
-                            </div>
-                            <div class="panel_distributor">
-
                             </div>
                         </div>
                     </div>
