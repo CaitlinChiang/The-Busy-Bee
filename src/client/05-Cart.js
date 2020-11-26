@@ -11,10 +11,10 @@ class Cart extends Component {
     cart_render = props => {
         return (
             <tr>
+                <td><span onClick={() => this.props.updateCart_delete(props.timestamp)}>&times;</span></td>
                 <td>{props.product_name}</td>
                 <td>{props.quantity}</td>
                 <td>P{props.price}.00</td>
-                <td><span onClick={() => this.props.updateCart_delete(props.timestamp)}>&times;</span></td>
             </tr>
         )
     }
@@ -31,10 +31,10 @@ class Cart extends Component {
                             <table class="customerTable">
                                 <thead>
                                     <tr>
+                                        <th></th>
                                         <th>ORDER</th>
                                         <th>QUANTITY</th>
                                         <th>PRICE</th>
-                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>

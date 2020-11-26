@@ -48,8 +48,8 @@
 
 .customerTable {
     border-collapse: collapse;
-    margin: 0px auto 100px;
-    width: 95%;
+    margin: 0px auto 80px;
+    width: 100%;
     border-radius: 5px 5px 0px 0px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }

@@ -242,7 +242,9 @@ class Order extends Component {
         }
     }
 
-    order_confirmation = _ => {
+    order_confirmation = event => {
+        event.preventDefault()
+
         const { cart, name, mobile, email, order_type, address, province, region, city, ncr_city, date, payment_method, payment_mediums, proof_account, provincialDistributor, regionalDistributor, provincial_distributors, regional_distributors } = this.state
 
         const proof = _ => {
@@ -262,7 +264,7 @@ class Order extends Component {
             }
         }
 
-        const order = _ => {
+        const order = cart_items => {
             for (let i = 0; i < payment_mediums.length; i++) {
                 if (payment_mediums[i].payment_method === payment_method) {
                     if (provincialDistributor === true || regionalDistributor === true) {
@@ -271,6 +273,7 @@ class Order extends Component {
                             if (confirmation) {
                                 alert(`Kindly attach a screenshot of your proof of payment to: ${proof()} (Viber). For deliveries, we will be messaging you shortly regarding the final amount inclusive of any possible additional delivery fee.`)
                                 this.order_add()
+                                subtract_inventory(cart_items)
                                 this.props.updateCart_clear()
                                 this.clear()
                             }
@@ -280,6 +283,7 @@ class Order extends Component {
                             if (confirmation) {
                                 alert(`Kindly attach a screenshot of your proof of payment to: ${proof()} (Viber). For deliveries, we will be messaging you shortly regarding the final amount inclusive of any possible additional delivery fee.`)
                                 this.order_add()
+                                subtract_inventory(cart_items)
                                 this.props.updateCart_clear()
                                 this.clear()
                             }
@@ -291,6 +295,7 @@ class Order extends Component {
                             if (confirmation) {
                                 alert("Kindly attach a screenshot of your proof of payment to: 0917 535 0923 (Viber). For deliveries, we will be messaging you shortly regarding the final amount inclusive of any possible additional delivery fee.")
                                 this.order_add()
+                                subtract_inventory(cart_items)
                                 this.props.updateCart_clear()
                                 this.clear()
                             }
@@ -300,6 +305,7 @@ class Order extends Component {
                             if (confirmation) {
                                 alert("Kindly attach a screenshot of your proof of payment to: 0917 535 0923 (Viber). For deliveries, we will be messaging you shortly regarding the final amount inclusive of any possible additional delivery fee.")
                                 this.order_add()
+                                subtract_inventory(cart_items)
                                 this.props.updateCart_clear()
                                 this.clear()
                             }
@@ -320,8 +326,7 @@ class Order extends Component {
                             }
                         }
                     })
-                })
-                
+                })                
             }
             else if (regionalDistributor === true) {
                 firebase.database().ref('distributors').child('regions').child(region).child('products').once('value', snapshot => {
@@ -405,8 +410,7 @@ class Order extends Component {
                         }
                     })
                     if (all_available) {
-                        subtract_inventory(cart_items)
-                        order()
+                        order(cart_items)
                     }
                 })
             }
@@ -466,8 +470,7 @@ class Order extends Component {
                     })
 
                     if (all_available) {
-                        subtract_inventory(cart_items)
-                        order()
+                        order(cart_items)
                     }
                 })
             }
@@ -526,31 +529,28 @@ class Order extends Component {
                         }
                     })
                     if (all_available) {
-                        subtract_inventory(cart_items)
-                        order()
+                        order(cart_items)
                     }
                 })
             }
         }
 
-        // if (cart.length > 0) {
-        //     if (order_type === 'Pickup') {
-        //         if (name.trim() !== '' && mobile.trim() !== '' && email.trim() !== '' && order_type.trim() !== '' && province.trim() !== '' && date !== '' && payment_method.trim() !== '') {
-        //             check_inventory()
-        //         }
-        //         else alert("Kindly fill in all input fields.")
-        //     }
-        //     //&& address.trim() !== ''
-        //     else if (order_type === 'Delivery') {
-        //         if (name.trim() !== '' && mobile.trim() !== '' && email.trim() !== '' && order_type.trim() !== ''  && province.trim() !== '' && (city.trim() !== '' || ncr_city.trim() !== '') && date.trim !== '' && payment_method.trim() !== '') {
-        //             check_inventory()
-        //         }
-        //         else alert("Kindly fill in all input fields.")
-        //     }
-        //     else alert("Kindly fill in all input fields.")
-        // }
-        // else alert("Your cart is empty.")
-        check_inventory()
+        if (cart.length > 0) {
+            if (order_type === 'Pickup') {
+                if (name.trim() !== '' && mobile.trim() !== '' && email.trim() !== '' && order_type.trim() !== '' && province.trim() !== '' && date !== '' && payment_method.trim() !== '') {
+                    check_inventory()
+                }
+                else alert("Kindly fill in all input fields.")
+            }
+            else if (order_type === 'Delivery') {
+                if (name.trim() !== '' && mobile.trim() !== '' && email.trim() !== '' && order_type.trim() !== '' && address.trim() !== '' && province.trim() !== '' && (city.trim() !== '' || ncr_city.trim() !== '') && date !== '' && payment_method.trim() !== '') {
+                     check_inventory()
+                }
+                else alert("Kindly fill in all input fields.")
+            }
+            else alert("Kindly fill in all input fields.")
+        }
+        else alert("Your cart is empty.")
     }
 
     // Render Data
@@ -745,12 +745,12 @@ class Order extends Component {
                     <div>
                         <form autoComplete="off">
                             <div>
-                                <input type="text" value={name} name="name" onChange={this.handleChange} placeholder="First Name, Last Name" required />
-                                <input type="text" value={mobile.trim()} name="mobile" onChange={this.handleChange} placeholder="Phone Number" required />
-                                <input type="text" value={email.trim()} name="email" onChange={this.handleChange} placeholder="Email Address" required />
+                                <input type="text" value={name} name="name" onChange={this.handleChange} placeholder="First Name, Last Name" />
+                                <input type="text" value={mobile.trim()} name="mobile" onChange={this.handleChange} placeholder="Phone Number" />
+                                <input type="text" value={email.trim()} name="email" onChange={this.handleChange} placeholder="Email Address" />
                             </div>
 
-                            <select value={order_type} name="order_type" onChange={this.handleChange} required >
+                            <select value={order_type} name="order_type" onChange={this.handleChange}>
                                 <option value="">--Receive Method--</option>
                                 <option value="Pickup">Pickup</option>
                                 <option value="Delivery">Delivery</option>
@@ -758,22 +758,22 @@ class Order extends Component {
 
                             { order_type !== '' ?
                                 <div>
-                                    <select value={province} name="province" onChange={this.handleChange} required >
+                                    <select value={province} name="province" onChange={this.handleChange}>
                                         <option value="">--Province/Region--</option>
                                         { this.sortArray(provinces).map(item => <option value={item.province_name}>{item.province_name}</option>) }
                                     </select>
                                     
-                                    <select value={payment_method} name="payment_method" onChange={this.handleChange} required > 
+                                    <select value={payment_method} name="payment_method" onChange={this.handleChange}> 
                                         <option value="">--Payment Method--</option>
                                         { payment_mediums.map(this.paymentMediums_render) }
                                     </select>
 
                                     { order_type === 'Delivery' ?
                                         <div>
-                                            <input type="text" value={address} name="address" onChange={this.handleChange} placeholder="Delivery Address" required />
+                                            <input type="text" value={address} name="address" onChange={this.handleChange} placeholder="Delivery Address" />
                                             
                                             { province === 'NCR' ?
-                                                <select value={ncr_city} name="ncr_city" onChange={this.handleChange} required > 
+                                                <select value={ncr_city} name="ncr_city" onChange={this.handleChange}> 
                                                     <option value="">--City / Municipality--</option>
                                                     { this.sortArray(ncr_cities).map(item => <option value={item.city_name}>{item.city_name}</option>) }
                                                 </select>
@@ -787,10 +787,10 @@ class Order extends Component {
 
                             <div class="datepicker">
                                 <h2>Date of Pickup / Delivery</h2>
-                                <DatePicker inline selected={date} onChange={date => this.setState({ date })} minDate={addDays(new Date(), 1)} maxDate={addMonths(new Date(), 2)} filterDate={this.filterDeliveryDates} format='YYYY-MM-DD' required />
+                                <DatePicker inline selected={date} onChange={date => this.setState({ date })} minDate={addDays(new Date(), 1)} maxDate={addMonths(new Date(), 2)} filterDate={this.filterDeliveryDates} format='YYYY-MM-DD' />
                             </div>
 
-                            <button type="submit" onClick={() => this.order_confirmation()}>Order</button>
+                            <button onClick={this.order_confirmation}>Order</button>
                         </form>
                     </div>
                 </section>
