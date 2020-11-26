@@ -72,8 +72,10 @@ class Controls extends Component {
                     })
 
                     for (let i = 0; i < products.length; i++) {
-                        firebase.database().ref('distributors').child('regions').child(region).child('products').child(products[i]).update({ amount: 0 })
+                        firebase.database().ref('distributors').child('regions').child(region).child('products').child(products[i].product_name).update({ amount: 0 })
                     }
+
+                    this.clear()
                 }
             }
             else alert("Please fill in all needed input fields.")
@@ -90,14 +92,14 @@ class Controls extends Component {
                     })
 
                     for (let i = 0; i < products.length; i++) {
-                        firebase.database().ref('distributors').child('regions').child(region).child('products').child(products[i]).update({ amount: 0 })
+                        firebase.database().ref('distributors').child('provinces').child(province).child('products').child(products[i].product_name).update({ amount: 0 })
                     }
+
+                    this.clear()
                 }
             }
             else alert("Please fill in all needed input fields.")
         }
-
-        this.clear()
     }
 
     // Edit Data
@@ -194,7 +196,7 @@ class Controls extends Component {
                             <input type="text" value={username_regional.trim()} name="username_regional" onChange={this.handleChange} placeholder="Distributor Email" />
                             <input type="text" value={password_regional.trim()} name="password_regional" onChange={this.handleChange} placeholder="Distributor Password" />
                             <input type="text" value={proof_regional} name="proof_regional" onChange={this.handleChange} placeholder="Proof of Payment" />
-                            <button type="submit" onClick={() => this.distributor_add('regional')}>Add Regional Distributor</button>
+                            <button onClick={() => this.distributor_add('regional')}>Add Regional Distributor</button>
                         </div>
 
                         <div class="panel_distributor">
@@ -205,7 +207,7 @@ class Controls extends Component {
                             <input type="text" value={username_provincial.trim()} name="username_provincial" onChange={this.handleChange} placeholder="Distributor Email" />
                             <input type="text" value={password_provincial.trim()} name="password_provincial" onChange={this.handleChange} placeholder="Distributor Password" />
                             <input type="text" value={proof_provincial} name="proof_provincial" onChange={this.handleChange} placeholder="Proof of Payment" />
-                            <button type="submit" onClick={() => this.distributor_add('provincial')}>Add Provincial Distributor</button>
+                            <button onClick={() => this.distributor_add('provincial')}>Add Provincial Distributor</button>
                         </div>
                     </div>
                 </section>
