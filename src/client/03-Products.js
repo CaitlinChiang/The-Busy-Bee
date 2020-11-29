@@ -151,6 +151,7 @@ class Products extends Component {
                         <div id="modalDescription">
                             <h2>Choose Any 3 Scents!</h2>
                             { package_offer_3.map(item => <p>{item.value}</p>) }
+                            {/* hideSelectedOptions={false} */}
                             <Select options={options} value={package_offer_3} name="package_offer_3" onChange={this.handleSelectChange_3} />
                             <button onClick={() => add_product()}>Add to Cart!</button>
                         </div>
