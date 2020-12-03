@@ -53,6 +53,12 @@ class Products extends Component {
         else if (name === 'Tea Time') return 'tea_time'
         else if (name === 'The Sweet Life') return 'the_sweet_life'
         else if (name === 'Lemonade') return 'lemonade'
+        else if (name === 'Luxe') return 'luxe'
+        else if (name === 'Bubblegum') return 'bubblegum'
+        else if (name === 'Pomelo Rush') return 'pomelo_rush'
+        else if (name === 'Lemon and Chia') return 'lemon_and_chia'
+        else if (name === 'Gingermint Cooler') return 'gingermint_cooler'
+        else if (name === 'Raspberry Slush') return 'raspberry_slush'
     }
 
     products_render = props => {
