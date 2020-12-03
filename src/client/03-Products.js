@@ -46,7 +46,7 @@ class Products extends Component {
     // Render Data
     productImages_render = name => {
         if (name === 'Citrus Splash') return 'citrus_splash'
-        else if (name === 'Grapefruit Crunch') return 'grapefruit_crunch'
+        else if (name === 'Grapefruit Crush') return 'grapefruit_crush'
         else if (name === 'Oatmeal') return 'oatmeal'
         else if (name === 'Pina Colada') return 'pina_colada'
         else if (name === 'Pink Guava') return 'pink_guava'
