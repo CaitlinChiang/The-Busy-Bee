@@ -59,6 +59,7 @@ class Products extends Component {
         else if (name === 'Lemon and Chia') return 'lemon_and_chia'
         else if (name === 'Gingermint Cooler') return 'gingermint_cooler'
         else if (name === 'Raspberry Slush') return 'raspberry_slush'
+        else if (name === 'Whipped Body Frosting') return 'whipped_body_frosting'
     }
 
     products_render = props => {
